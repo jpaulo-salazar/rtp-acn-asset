@@ -8,18 +8,18 @@ const app = express();
 const options = {
   method: 'POST',
   uri: 'https://api-ap-southeast-2-production.boxever.com/v2/callFlows',
-  body: {"context": 
-	{
-		"browserId": "1920c00f-b9ff-4e3e-b2d8-bcc9258ea9b6",
-		"clientKey": "scuatvAGHM9ke1RfXDVgJmE61D5HobSw",
-		"channel": "WEB",
-		"language": "EN",
-		"currencyCode": "SGD",
-		"uri": "Home Page Post Login",
-		"region": "Destinations",
-		"pointOfSale": "accentureshowcase.com"
-	}
-},
+  body: {
+    "context": {
+      "browserId": "1920c00f-b9ff-4e3e-b2d8-bcc9258ea9b6",
+      "clientKey": "scuatvAGHM9ke1RfXDVgJmE61D5HobSw",
+      "channel": "WEB",
+      "language": "EN",
+      "currencyCode": "SGD",
+      "uri": "Chat",
+      "region": "Destinations",
+      "pointOfSale": "accentureshowcase.com"
+    }
+  },
   json: true
   // JSON stringifies the body automatically
 };
@@ -42,7 +42,18 @@ app.post('/fulfillment', (req, res) => {
       // Handle the response
       console.log(response.result.channel);
       let resp = {
-        fulfillmentText: response.result.offers[0].attributes.Name
+        // fulfillmentText: response.result.offers[0].attributes.Name
+        fulfillmentMessages: [{
+          card: {
+            title: "Card Title",
+            subtitle: "card text",
+            imageuri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+            buttons: [{
+              text: "Button text",
+              postback: "https://assistant.google.com/"
+            }]
+          }
+        }]
       };
       res.json(resp);
     })
