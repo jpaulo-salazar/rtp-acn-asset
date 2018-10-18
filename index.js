@@ -47,7 +47,7 @@ app.post('/fulfillment', (req, res) => {
           card: {
             title: "Card Title",
             subtitle: "card text",
-            imageuri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+            image_uri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
             buttons: [{
               text: "Button text",
               postback: "https://assistant.google.com/"
