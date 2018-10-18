@@ -15,7 +15,7 @@ const options = {
       "channel": "WEB",
       "language": "EN",
       "currencyCode": "SGD",
-      "uri": "Chat",
+      "uri": "Home Page Post Login",
       "region": "Destinations",
       "pointOfSale": "accentureshowcase.com"
     }
