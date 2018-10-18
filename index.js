@@ -34,7 +34,7 @@ app.use(bodyParser.json())
 app.post('/fulfillment', (req, res) => {
   console.log(req.body);
   const Errresponse = {
-    fulfillmentText: "Your API call does not works fine !",
+    fulfillmentText: "Your API call does not work fine !",
   }
 
   request(options)
