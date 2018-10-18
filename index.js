@@ -16,7 +16,15 @@ app.use(function (req, res, next) {
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
-app.post('/fulfillment', (req, res) => res.send(TestResp))
+app.post('/fulfillment', (req, res) => {
+  console.log(req.body);
+  const response = {
+    fulfillmentText: "Your webhook works fine !",
+  }
+  res.json(response);
+
+
+});
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 app.get('/', (req, res) => res.render('pages/index'))
