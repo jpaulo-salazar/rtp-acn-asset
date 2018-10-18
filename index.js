@@ -14,7 +14,7 @@ app.use(function(req, res, next) {
   app.set('views', path.join(__dirname, 'views'))
   app.set('view engine', 'ejs')
   app.get('/', (req, res) => res.render('pages/index'))
-  app.get('/testAPI', (req, res) => res.send("TestApi"))
+  app.post('/testAPI', (req, res) => res.send("TestApi"))
   app.get('/times', (req, res) => {
     let result = ''
     const times = process.env.TIMES || 5
