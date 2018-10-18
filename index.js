@@ -42,14 +42,14 @@ app.post('/fulfillment', (req, res) => {
       // Handle the response
       console.log(response.result.channel);
       let resp = {
-        // fulfillmentText: response.result.offers[0].attributes.Name
+        fulfillmentText: response.result.offers[0].attributes.Name,
         fulfillmentMessages: [{
           card: {
-            title: "Card Title",
-            subtitle: "card text",
-            image_uri: "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+            title: response.result.offers[0].attributes.Type,
+            subtitle: response.result.offers[0].attributes.Name,
+            image_uri: response.result.offers[0].attributes.ImageUrl,
             buttons: [{
-              text: "Button text",
+              text: "Read More",
               postback: "https://assistant.google.com/"
             }]
           }
