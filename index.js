@@ -1,15 +1,21 @@
-const cool = require('cool-ascii-faces')
-const express = require('express')
-const path = require('path')
-const PORT = process.env.PORT || 5000
+const express = require('express');
+const path = require('path');
+const PORT = process.env.PORT || 5000;
 
-express()
-  .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
-  .get('/testAPI', (req, res) => res.send("TestApi"))
-  .get('/times', (req, res) => {
+const app = express();
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+  app.use(express.static(path.join(__dirname, 'public')))
+
+  app.set('views', path.join(__dirname, 'views'))
+  app.set('view engine', 'ejs')
+  app.get('/', (req, res) => res.render('pages/index'))
+  app.get('/testAPI', (req, res) => res.send("TestApi"))
+  app.get('/times', (req, res) => {
     let result = ''
     const times = process.env.TIMES || 5
     for (i = 0; i < times; i++) {
@@ -17,5 +23,4 @@ express()
     }
     res.send(result)
   })
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-
+  app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
