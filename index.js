@@ -42,38 +42,37 @@ app.post('/fulfillment', (req, res) => {
       // Handle the response
       console.log(response.result.channel);
       let resp = {
-          
+
         fulfillmentText: response.result.offers[0].attributes.Name,
         fulfillmentMessages: [{
-         
-         /*  card: {
-            title: response.result.offers[0].attributes.Type,
-            subtitle: response.result.offers[0].attributes.Name,
-            image_uri: response.result.offers[0].attributes.ImageUrl,
-            buttons: [{
-              text: "Read More",
-              postback: response.result.offers[0].attributes.LinkUrl
-            }]
-          }, */
+
+          /*  card: {
+             title: response.result.offers[0].attributes.Type,
+             subtitle: response.result.offers[0].attributes.Name,
+             image_uri: response.result.offers[0].attributes.ImageUrl,
+             buttons: [{
+               text: "Read More",
+               postback: response.result.offers[0].attributes.LinkUrl
+             }]
+           }, */
           payload: {
-            message: "render a Actionable message from webhook",
+            message: "Hey I am Pacific airlines bot",
             ignoreTextResponse: false,
             platform: "kommunicate",
             metadata: {
-                // replace this with metadata JSON supported by kommunicate 
-                contentType: "300",
-                templateId: "6",
-                payload: [{
-                    title: "Yes",
-                    message: "Cool! send me more."
-                }, {
-                    title: "No ",
-                    message: "Don't send it to me again"
-                }]
+              // replace this with metadata JSON supported by kommunicate 
+              contentType: "300",
+              templateId: "9",
+              payload: [{
+                caption: response.result.offers[0].attributes.Name,
+                url: response.result.offers[0].attributes.ImageUrl
+              }, {
+                caption: response.result.offers[1].attributes.Name,
+                url: response.result.offers[1].attributes.ImageUrl
+              }]
             }
-        }
-        },
-      ]
+          }
+        }, ]
       };
       console.log(resp);
       res.json(resp);
