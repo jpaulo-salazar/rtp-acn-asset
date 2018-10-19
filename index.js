@@ -46,7 +46,7 @@ app.post('/fulfillment', (req, res) => {
         fulfillmentText: response.result.offers[0].attributes.Name,
         fulfillmentMessages: [{
          
-          card: {
+         /*  card: {
             title: response.result.offers[0].attributes.Type,
             subtitle: response.result.offers[0].attributes.Name,
             image_uri: response.result.offers[0].attributes.ImageUrl,
@@ -54,7 +54,7 @@ app.post('/fulfillment', (req, res) => {
               text: "Read More",
               postback: response.result.offers[0].attributes.LinkUrl
             }]
-          },
+          }, */
           payload: {
             message: "render a Actionable message from webhook",
             ignoreTextResponse: false,
