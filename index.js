@@ -42,17 +42,13 @@ app.post('/fulfillment', (req, res) => {
       // Handle the response
       console.log(response.result.channel);
       let resp = {
-        metadata: {
-          contentType: "300",
-          templateId: "6",
           payload: [{
             title: "Yes",
             message: "Cool! send me more."
           }, {
             title: "No ",
             message: "Don't send it to me again"
-          }]
-        },
+          }],
         fulfillmentText: response.result.offers[0].attributes.Name,
         fulfillmentMessages: [{
           card: {
