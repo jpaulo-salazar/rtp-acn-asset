@@ -42,15 +42,25 @@ app.post('/fulfillment', (req, res) => {
       // Handle the response
       console.log(response.result.channel);
       let resp = {
-          payload: [{
-            title: "Yes",
-            message: "Cool! send me more."
-          }, {
-            title: "No ",
-            message: "Don't send it to me again"
-          }],
+          
         fulfillmentText: response.result.offers[0].attributes.Name,
         fulfillmentMessages: [{
+          payload: {
+            message: "render a Actionable message from webhook",
+            platform: "kommunicate",
+            metadata: {
+                // replace this with metadata JSON supported by kommunicate 
+                contentType: "300",
+                templateId: "6",
+                payload: [{
+                    title: "Yes",
+                    message: "Cool! send me more."
+                }, {
+                    title: "No ",
+                    message: "Don't send it to me again"
+                }]
+            }
+        },
           card: {
             title: response.result.offers[0].attributes.Type,
             subtitle: response.result.offers[0].attributes.Name,
@@ -60,7 +70,8 @@ app.post('/fulfillment', (req, res) => {
               postback: response.result.offers[0].attributes.LinkUrl
             }]
           }
-        }]
+        },
+      ]
       };
       console.log(resp);
       res.json(resp);
