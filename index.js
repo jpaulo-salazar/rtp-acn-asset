@@ -61,11 +61,12 @@ app.post('/fulfillment', (req, res) => {
             image_uri: response.result.offers[0].attributes.ImageUrl,
             buttons: [{
               text: "Read More",
-              postback: "https://assistant.google.com/"
+              postback: response.result.offers[0].attributes.LinkUrl
             }]
           }
         }]
       };
+      console.log(resp);
       res.json(resp);
     })
     .catch(function (err) {
