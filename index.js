@@ -45,8 +45,19 @@ app.post('/fulfillment', (req, res) => {
           
         fulfillmentText: response.result.offers[0].attributes.Name,
         fulfillmentMessages: [{
+         
+          card: {
+            title: response.result.offers[0].attributes.Type,
+            subtitle: response.result.offers[0].attributes.Name,
+            image_uri: response.result.offers[0].attributes.ImageUrl,
+            buttons: [{
+              text: "Read More",
+              postback: response.result.offers[0].attributes.LinkUrl
+            }]
+          },
           payload: {
             message: "render a Actionable message from webhook",
+            ignoreTextResponse: false,
             platform: "kommunicate",
             metadata: {
                 // replace this with metadata JSON supported by kommunicate 
@@ -60,16 +71,7 @@ app.post('/fulfillment', (req, res) => {
                     message: "Don't send it to me again"
                 }]
             }
-        },
-          card: {
-            title: response.result.offers[0].attributes.Type,
-            subtitle: response.result.offers[0].attributes.Name,
-            image_uri: response.result.offers[0].attributes.ImageUrl,
-            buttons: [{
-              text: "Read More",
-              postback: response.result.offers[0].attributes.LinkUrl
-            }]
-          }
+        }
         },
       ]
       };
