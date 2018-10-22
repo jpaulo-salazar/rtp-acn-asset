@@ -85,7 +85,7 @@ app.post('/fulfillment', (req, res) => {
 
   } else if (req.body.queryResult.action == "input.welcome") {
     let resp = {
-      fulfillmentText: "Hello! " +req.body.queryResult.intent.originalDetectIntentRequest.payload.user_first_name+ " How can I help you?",
+      fulfillmentText: "Hello! " +req.body.originalDetectIntentRequest.payload.user_first_name+ " How can I help you?",
     };
   }
 
@@ -95,3 +95,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
+
+
+
+
