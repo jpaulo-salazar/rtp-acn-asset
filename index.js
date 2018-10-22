@@ -36,52 +36,58 @@ app.post('/fulfillment', (req, res) => {
   const Errresponse = {
     fulfillmentText: "Your API call does not work fine !",
   }
+  console.log("action: " + req.body.queryResult.action);
+  if (req.body.queryResult.action == "input.offers") {
+    request(options)
+      .then(function (response) {
+        // Handle the response
+        console.log(response.result.channel);
+        let resp = {
 
-  request(options)
-    .then(function (response) {
-      // Handle the response
-      console.log(response.result.channel);
-      let resp = {
+          fulfillmentText: response.result.offers[0].attributes.Name,
+          fulfillmentMessages: [{
 
-        fulfillmentText: response.result.offers[0].attributes.Name,
-        fulfillmentMessages: [{
-
-          /*  card: {
-             title: response.result.offers[0].attributes.Type,
-             subtitle: response.result.offers[0].attributes.Name,
-             image_uri: response.result.offers[0].attributes.ImageUrl,
-             buttons: [{
-               text: "Read More",
-               postback: response.result.offers[0].attributes.LinkUrl
-             }]
-           }, */
-          payload: {
-            message: "Hey I am Pacific airlines bot",
-            ignoreTextResponse: false,
-            platform: "kommunicate",
-            metadata: {
-              // replace this with metadata JSON supported by kommunicate 
-              contentType: "300",
-              templateId: "9",
-              payload: [{
-                caption: response.result.offers[0].attributes.Name,
-                url: response.result.offers[0].attributes.ImageUrl
-              }, {
-                caption: response.result.offers[1].attributes.Name,
-                url: response.result.offers[1].attributes.ImageUrl
-              }]
+            /*  card: {
+               title: response.result.offers[0].attributes.Type,
+               subtitle: response.result.offers[0].attributes.Name,
+               image_uri: response.result.offers[0].attributes.ImageUrl,
+               buttons: [{
+                 text: "Read More",
+                 postback: response.result.offers[0].attributes.LinkUrl
+               }]
+             }, */
+            payload: {
+              message: "Hey I am Pacific airlines bot",
+              ignoreTextResponse: false,
+              platform: "kommunicate",
+              metadata: {
+                // replace this with metadata JSON supported by kommunicate 
+                contentType: "300",
+                templateId: "9",
+                payload: [{
+                  caption: response.result.offers[0].attributes.Name,
+                  url: response.result.offers[0].attributes.ImageUrl
+                }, {
+                  caption: response.result.offers[1].attributes.Name,
+                  url: response.result.offers[1].attributes.ImageUrl
+                }]
+              }
             }
-          }
-        }, ]
-      };
-      console.log(resp);
-      res.json(resp);
-    })
-    .catch(function (err) {
-      // Deal with the error
-      res.json(Errresponse);
-    })
+          }, ]
+        };
+        console.log(resp);
+        res.json(resp);
+      })
+      .catch(function (err) {
+        // Deal with the error
+        res.json(Errresponse);
+      })
 
+  } else if (req.body.queryResult.action == "input.welcome") {
+    let resp = {
+      fulfillmentText: "Hello! " +req.body.queryResult.intent.originalDetectIntentRequest.payload.user_first_name+ " How can I help you?",
+    };
+  }
 
 
 });
