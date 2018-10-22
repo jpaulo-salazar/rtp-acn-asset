@@ -23,6 +23,13 @@ const options = {
   json: true
   // JSON stringifies the body automatically
 };
+
+const identity_event = {
+  method: 'GET',
+  uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=scuatvAGHM9ke1RfXDVgJmE61D5HobSw&message=',
+  json: true
+  
+};
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -38,51 +45,65 @@ app.post('/fulfillment', (req, res) => {
   }
   console.log("action: " + req.body.queryResult.action);
   if (req.body.queryResult.action == "input.offers") {
-    request(options)
+    identity_event.uri = identity_event.uri + eq.body.originalDetectIntentRequest.payload;
+    console.log(identity_event.uri);
+    console.log("Identity Event");
+    request(identity_event)
       .then(function (response) {
         // Handle the response
-        console.log("In Offers");
-        console.log(response.result.channel);
-        let resp = {
+        console.log(response);
+        request(options)
+          .then(function (response) {
+            // Handle the response
+            console.log("In Offers");
+            console.log(response.result.channel);
+            let resp = {
 
-          fulfillmentText: response.result.offers[0].attributes.Name,
-          fulfillmentMessages: [{
+              fulfillmentText: response.result.offers[0].attributes.Name,
+              fulfillmentMessages: [{
 
-            /*  card: {
-               title: response.result.offers[0].attributes.Type,
-               subtitle: response.result.offers[0].attributes.Name,
-               image_uri: response.result.offers[0].attributes.ImageUrl,
-               buttons: [{
-                 text: "Read More",
-                 postback: response.result.offers[0].attributes.LinkUrl
-               }]
-             }, */
-            payload: {
-              message: "Hey I am Pacific airlines bot",
-              ignoreTextResponse: false,
-              platform: "kommunicate",
-              metadata: {
-                // replace this with metadata JSON supported by kommunicate 
-                contentType: "300",
-                templateId: "9",
-                payload: [{
-                  caption: response.result.offers[0].attributes.Name,
-                  url: response.result.offers[0].attributes.ImageUrl
-                }, {
-                  caption: response.result.offers[1].attributes.Name,
-                  url: response.result.offers[1].attributes.ImageUrl
-                }]
-              }
-            }
-          }, ]
-        };
-        console.log(resp);
-        res.json(resp);
+                /*  card: {
+                   title: response.result.offers[0].attributes.Type,
+                   subtitle: response.result.offers[0].attributes.Name,
+                   image_uri: response.result.offers[0].attributes.ImageUrl,
+                   buttons: [{
+                     text: "Read More",
+                     postback: response.result.offers[0].attributes.LinkUrl
+                   }]
+                 }, */
+                payload: {
+                  message: "Hey I am Pacific airlines bot",
+                  ignoreTextResponse: false,
+                  platform: "kommunicate",
+                  metadata: {
+                    // replace this with metadata JSON supported by kommunicate 
+                    contentType: "300",
+                    templateId: "9",
+                    payload: [{
+                      caption: response.result.offers[0].attributes.Name,
+                      url: response.result.offers[0].attributes.ImageUrl
+                    }, {
+                      caption: response.result.offers[1].attributes.Name,
+                      url: response.result.offers[1].attributes.ImageUrl
+                    }]
+                  }
+                }
+              }, ]
+            };
+            console.log(resp);
+            res.json(resp);
+          })
+          .catch(function (err) {
+            // Deal with the error
+            res.json(Errresponse);
+          })
+
       })
       .catch(function (err) {
         // Deal with the error
         res.json(Errresponse);
       })
+
 
   } else if (req.body.queryResult.action == "input.welcome") {
     console.log("In Welcome");
@@ -95,7 +116,7 @@ app.post('/fulfillment', (req, res) => {
       }]
     }; */
     let resp = {
-      fulfillmentText:"Hello! " + req.body.originalDetectIntentRequest.payload.user_first_name + " How can I help you?"
+      fulfillmentText: "Hello! " + req.body.originalDetectIntentRequest.payload.user_first_name + " How can I help you?"
     };
     res.json(resp);
   } else {
@@ -107,3 +128,4 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
