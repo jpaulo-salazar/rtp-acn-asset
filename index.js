@@ -92,8 +92,12 @@ app.post('/fulfillment', (req, res) => {
         }
       }]
     };
+    res.json(resp);
   }
-
+ else
+ {
+   res.json(Errresponse);
+ }
 
 });
 app.set('views', path.join(__dirname, 'views'));
