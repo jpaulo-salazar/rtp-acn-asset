@@ -41,6 +41,7 @@ app.post('/fulfillment', (req, res) => {
     request(options)
       .then(function (response) {
         // Handle the response
+        console.log("In Offers");
         console.log(response.result.channel);
         let resp = {
 
@@ -84,20 +85,22 @@ app.post('/fulfillment', (req, res) => {
       })
 
   } else if (req.body.queryResult.action == "input.welcome") {
-    let resp = {
+    console.log("In Welcome");
+    /* let resp = {
       fulfillmentMessages: [{
         payload: {
           message: "Hello! " + req.body.originalDetectIntentRequest.payload.user_first_name + " How can I help you?",
           platform: "kommunicate"
         }
       }]
+    }; */
+    let resp = {
+      fulfillmentText:"Hello! " + req.body.originalDetectIntentRequest.payload.user_first_name + " How can I help you?"
     };
     res.json(resp);
+  } else {
+    res.json(Errresponse);
   }
- else
- {
-   res.json(Errresponse);
- }
 
 });
 app.set('views', path.join(__dirname, 'views'));
