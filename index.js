@@ -47,6 +47,11 @@ app.post('/fulfillment', (req, res) => {
   if (req.body.queryResult.action == "input.offers") {
     //identity_event.uri = identity_event.uri + req.body.originalDetectIntentRequest.payload;
      console.log(req.body.originalDetectIntentRequest.payload);
+     options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+     options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+     options.body.context.currencyCode=req.body.originalDetectIntentRequest.payload.currency;
+     options.body.context.language=req.body.originalDetectIntentRequest.payload.language;
+     options.body.context.pointOfSale=req.body.originalDetectIntentRequest.payload.pos;
     //console.log("Identity Event");
     //request(identity_event)
     // .then(function (response) {
@@ -58,6 +63,7 @@ app.post('/fulfillment', (req, res) => {
         // console.log(response)
         console.log("In Offers");
         console.log("Offers Response")
+        
         console.log(response);
         let resp = {
 
