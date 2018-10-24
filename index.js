@@ -46,12 +46,12 @@ app.post('/fulfillment', (req, res) => {
   console.log("action: " + req.body.queryResult.action);
   if (req.body.queryResult.action == "input.offers") {
     //identity_event.uri = identity_event.uri + req.body.originalDetectIntentRequest.payload;
-     console.log(req.body.originalDetectIntentRequest.payload);
-     options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
-     options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
-     options.body.context.currencyCode=req.body.originalDetectIntentRequest.payload.currency;
-     options.body.context.language=req.body.originalDetectIntentRequest.payload.language;
-     options.body.context.pointOfSale=req.body.originalDetectIntentRequest.payload.pos;
+    console.log(req.body.originalDetectIntentRequest.payload);
+    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
     //console.log("Identity Event");
     //request(identity_event)
     // .then(function (response) {
@@ -63,7 +63,7 @@ app.post('/fulfillment', (req, res) => {
         // console.log(response)
         console.log("In Offers");
         console.log("Offers Response")
-        
+
         console.log(response);
         let resp = {
 
@@ -83,7 +83,7 @@ app.post('/fulfillment', (req, res) => {
               message: "Hey I am Pacific airlines bot",
               ignoreTextResponse: false,
               platform: "kommunicate",
-              metadata: {
+             /*  metadata: {
                 // replace this with metadata JSON supported by kommunicate 
                 contentType: "300",
                 templateId: "9",
@@ -94,6 +94,31 @@ app.post('/fulfillment', (req, res) => {
                   caption: response.result.offers[1].attributes.Name,
                   url: response.result.offers[1].attributes.ImageUrl
                 }]
+              } */
+              metadata:{
+                contentType:"300",
+                templateId:"7",
+                payload:{
+                  headerImgSrc:"",
+                  headerText:"Test Header Text",
+                  elements:[{
+                    imgSrc:response.result.offers[0].attributes.ImageUrl,
+                    title:response.result.offers[0].attributes.Name,
+                    description:"Test Desc",
+                    action:{
+                      url:response.result.offers[0].attributes.LinkUrl,
+                      type:"link"
+                    }
+                  }],
+                  buttons:[{
+                    name:"See us on facebook",
+                    action:{
+                      url:"https://www.google.com",
+                      type:"link"
+                    }
+                  }]
+                }
+
               }
             }
           }, ]
