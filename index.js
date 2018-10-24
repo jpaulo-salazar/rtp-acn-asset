@@ -114,14 +114,16 @@ app.post('/fulfillment', (req, res) => {
         }
       }]
     }; */
+    console.log("Name: " + req.body.originalDetectIntentRequest.payload.firstname);
+    let resp = {
+      fulfillmentText: ""
+    };
     if (req.body.originalDetectIntentRequest.payload.firstname != null) {
-      let resp = {
-        fulfillmentText: "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you?"
-      };
+      resp.fulfillmentText = "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you?"
+
     } else {
-      let resp = {
-        fulfillmentText: "Hello! How can I help you?"
-      };
+      resp.fulfillmentText = "Hello! How can I help you?"
+
     }
     res.json(resp);
   } else {
