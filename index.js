@@ -80,7 +80,7 @@ app.post('/fulfillment', (req, res) => {
                }]
              }, */
             payload: {
-              message: "Hey I am Pacific airlines bot",
+              message: "Here is what I found: ",
               ignoreTextResponse: false,
               platform: "kommunicate",
               /*  metadata: {
@@ -99,12 +99,12 @@ app.post('/fulfillment', (req, res) => {
                 contentType: "300",
                 templateId: "7",
                 payload: {
-                  headerImgSrc: "",
+                  headerImgSrc: response.result.offers[0].attributes.ImageUrl,
                   headerText: "Test Header Text",
                   elements: [{
                     imgSrc: response.result.offers[0].attributes.ImageUrl,
                     title: response.result.offers[0].attributes.Name,
-                    description: "Test Desc",
+                    description: response.result.offers[0].description,
                     action: {
                       url: response.result.offers[0].attributes.LinkUrl,
                       type: "link"
@@ -113,7 +113,7 @@ app.post('/fulfillment', (req, res) => {
                   {
                     imgSrc: response.result.offers[1].attributes.ImageUrl,
                     title: response.result.offers[1].attributes.Name,
-                    description: "Test Desc",
+                    description: response.result.offers[1].description,
                     action: {
                       url: response.result.offers[1].attributes.LinkUrl,
                       type: "link"
