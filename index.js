@@ -83,38 +83,49 @@ app.post('/fulfillment', (req, res) => {
               message: "Hey I am Pacific airlines bot",
               ignoreTextResponse: false,
               platform: "kommunicate",
-             /*  metadata: {
-                // replace this with metadata JSON supported by kommunicate 
+              /*  metadata: {
+                 // replace this with metadata JSON supported by kommunicate 
+                 contentType: "300",
+                 templateId: "9",
+                 payload: [{
+                   caption: response.result.offers[0].attributes.Name,
+                   url: response.result.offers[0].attributes.ImageUrl
+                 }, {
+                   caption: response.result.offers[1].attributes.Name,
+                   url: response.result.offers[1].attributes.ImageUrl
+                 }]
+               } */
+              metadata: {
                 contentType: "300",
-                templateId: "9",
-                payload: [{
-                  caption: response.result.offers[0].attributes.Name,
-                  url: response.result.offers[0].attributes.ImageUrl
-                }, {
-                  caption: response.result.offers[1].attributes.Name,
-                  url: response.result.offers[1].attributes.ImageUrl
-                }]
-              } */
-              metadata:{
-                contentType:"300",
-                templateId:"7",
-                payload:{
-                  headerImgSrc:"",
-                  headerText:"Test Header Text",
-                  elements:[{
-                    imgSrc:response.result.offers[0].attributes.ImageUrl,
-                    title:response.result.offers[0].attributes.Name,
-                    description:"Test Desc",
-                    action:{
-                      url:response.result.offers[0].attributes.LinkUrl,
-                      type:"link"
+                templateId: "7",
+                payload: {
+                  headerImgSrc: "",
+                  headerText: "Test Header Text",
+                  elements: [{
+                    imgSrc: response.result.offers[0].attributes.ImageUrl,
+                    title: response.result.offers[0].attributes.Name,
+                    description: "Test Desc",
+                    action: {
+                      url: response.result.offers[0].attributes.LinkUrl,
+                      type: "link"
                     }
-                  }],
-                  buttons:[{
-                    name:"See us on facebook",
-                    action:{
-                      url:"https://www.google.com",
-                      type:"link"
+                  },
+                  {
+                    imgSrc: response.result.offers[1].attributes.ImageUrl,
+                    title: response.result.offers[1].attributes.Name,
+                    description: "Test Desc",
+                    action: {
+                      url: response.result.offers[1].attributes.LinkUrl,
+                      type: "link"
+                    }
+                  }
+
+                ],
+                  buttons: [{
+                    name: "See us on facebook",
+                    action: {
+                      url: "https://www.google.com",
+                      type: "link"
                     }
                   }]
                 }
