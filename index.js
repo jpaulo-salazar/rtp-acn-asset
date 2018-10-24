@@ -116,9 +116,9 @@ app.post('/fulfillment', (req, res) => {
         }
       }]
     }; */
-    if (req.body.originalDetectIntentRequest.payload.user_first_name != null) {
+    if (req.body.originalDetectIntentRequest.payload.firstname != null) {
       let resp = {
-        fulfillmentText: "Hello " + req.body.originalDetectIntentRequest.payload.user_first_name + "! How can I help you?"
+        fulfillmentText: "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you?"
       };
     }
     else
