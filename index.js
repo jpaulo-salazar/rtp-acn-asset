@@ -28,7 +28,7 @@ const identity_event = {
   method: 'GET',
   uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=scuatvAGHM9ke1RfXDVgJmE61D5HobSw&message=',
   json: true
-  
+
 };
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -46,7 +46,7 @@ app.post('/fulfillment', (req, res) => {
   console.log("action: " + req.body.queryResult.action);
   if (req.body.queryResult.action == "input.offers") {
     identity_event.uri = identity_event.uri + req.body.originalDetectIntentRequest.payload;
-    console.log(identity_event.uri);
+    console.log(JSON.stringify(identity_event.uri));
     console.log("Identity Event");
     request(identity_event)
       .then(function (response) {
@@ -55,6 +55,7 @@ app.post('/fulfillment', (req, res) => {
         request(options)
           .then(function (response) {
             // Handle the response
+            // console.log(response)
             console.log("In Offers");
             console.log(response.result.channel);
             let resp = {
@@ -115,9 +116,17 @@ app.post('/fulfillment', (req, res) => {
         }
       }]
     }; */
-    let resp = {
-      fulfillmentText: "Hello! " + req.body.originalDetectIntentRequest.payload.user_first_name + " How can I help you?"
-    };
+    if (req.body.originalDetectIntentRequest.payload.user_first_name != null) {
+      let resp = {
+        fulfillmentText: "Hello " + req.body.originalDetectIntentRequest.payload.user_first_name + "! How can I help you?"
+      };
+    }
+    else
+    {
+      let resp = {
+        fulfillmentText: "Hello! How can I help you?"
+      };
+    }
     res.json(resp);
   } else {
     res.json(Errresponse);
@@ -128,4 +137,3 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => res.render('pages/index'));
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
-
