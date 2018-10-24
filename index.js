@@ -11,7 +11,7 @@ const options = {
   body: {
     "context": {
       "browserId": "1920c00f-b9ff-4e3e-b2d8-bcc9258ea9b6",
-      "clientKey": "scuatvAGHM9ke1RfXDVgJmE61D5HobSw",
+      "clientKey": box_key,
       "channel": "WEB",
       "language": "EN",
       "currencyCode": "SGD",
@@ -45,10 +45,10 @@ app.post('/fulfillment', (req, res) => {
   }
   console.log("action: " + req.body.queryResult.action);
   if (req.body.queryResult.action == "input.offers") {
-    identity_event.uri = identity_event.uri + req.body.originalDetectIntentRequest.payload;
-    console.log(req.body.originalDetectIntentRequest.payload);
-    console.log("Identity Event");
-    request(identity_event)
+    //identity_event.uri = identity_event.uri + req.body.originalDetectIntentRequest.payload;
+     console.log(req.body.originalDetectIntentRequest.payload);
+    //console.log("Identity Event");
+    //request(identity_event)
     // .then(function (response) {
     // Handle the response
     //  console.log(response);
