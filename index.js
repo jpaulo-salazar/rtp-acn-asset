@@ -46,7 +46,7 @@ app.post('/fulfillment', (req, res) => {
   console.log("action: " + req.body.queryResult.action);
   if (req.body.queryResult.action == "input.offers") {
     identity_event.uri = identity_event.uri + req.body.originalDetectIntentRequest.payload;
-    console.log(JSON.stringify(identity_event.uri));
+    console.log(req.body.originalDetectIntentRequest.payload);
     console.log("Identity Event");
     request(identity_event)
     // .then(function (response) {
