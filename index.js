@@ -49,61 +49,59 @@ app.post('/fulfillment', (req, res) => {
     console.log(JSON.stringify(identity_event.uri));
     console.log("Identity Event");
     request(identity_event)
+    // .then(function (response) {
+    // Handle the response
+    //  console.log(response);
+    request(options)
       .then(function (response) {
         // Handle the response
+        // console.log(response)
+        console.log("In Offers");
+        console.log("Offers Response")
         console.log(response);
-        request(options)
-          .then(function (response) {
-            // Handle the response
-            // console.log(response)
-            console.log("In Offers");
-            console.log(response.result.channel);
-            let resp = {
+        let resp = {
 
-              fulfillmentText: response.result.offers[0].attributes.Name,
-              fulfillmentMessages: [{
+          fulfillmentText: response.result.offers[0].attributes.Name,
+          fulfillmentMessages: [{
 
-                /*  card: {
-                   title: response.result.offers[0].attributes.Type,
-                   subtitle: response.result.offers[0].attributes.Name,
-                   image_uri: response.result.offers[0].attributes.ImageUrl,
-                   buttons: [{
-                     text: "Read More",
-                     postback: response.result.offers[0].attributes.LinkUrl
-                   }]
-                 }, */
-                payload: {
-                  message: "Hey I am Pacific airlines bot",
-                  ignoreTextResponse: false,
-                  platform: "kommunicate",
-                  metadata: {
-                    // replace this with metadata JSON supported by kommunicate 
-                    contentType: "300",
-                    templateId: "9",
-                    payload: [{
-                      caption: response.result.offers[0].attributes.Name,
-                      url: response.result.offers[0].attributes.ImageUrl
-                    }, {
-                      caption: response.result.offers[1].attributes.Name,
-                      url: response.result.offers[1].attributes.ImageUrl
-                    }]
-                  }
-                }
-              }, ]
-            };
-            console.log(resp);
-            res.json(resp);
-          })
-          .catch(function (err) {
-            // Deal with the error
-            res.json(Errresponse);
-          })
-
+            /*  card: {
+               title: response.result.offers[0].attributes.Type,
+               subtitle: response.result.offers[0].attributes.Name,
+               image_uri: response.result.offers[0].attributes.ImageUrl,
+               buttons: [{
+                 text: "Read More",
+                 postback: response.result.offers[0].attributes.LinkUrl
+               }]
+             }, */
+            payload: {
+              message: "Hey I am Pacific airlines bot",
+              ignoreTextResponse: false,
+              platform: "kommunicate",
+              metadata: {
+                // replace this with metadata JSON supported by kommunicate 
+                contentType: "300",
+                templateId: "9",
+                payload: [{
+                  caption: response.result.offers[0].attributes.Name,
+                  url: response.result.offers[0].attributes.ImageUrl
+                }, {
+                  caption: response.result.offers[1].attributes.Name,
+                  url: response.result.offers[1].attributes.ImageUrl
+                }]
+              }
+            }
+          }, ]
+        };
+        console.log(resp);
+        res.json(resp);
       })
       .catch(function (err) {
         // Deal with the error
         res.json(Errresponse);
       })
+
+    // })
+
 
 
   } else if (req.body.queryResult.action == "input.welcome") {
@@ -120,9 +118,7 @@ app.post('/fulfillment', (req, res) => {
       let resp = {
         fulfillmentText: "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you?"
       };
-    }
-    else
-    {
+    } else {
       let resp = {
         fulfillmentText: "Hello! How can I help you?"
       };
