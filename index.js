@@ -188,9 +188,6 @@ app.post('/fulfillment', (req, res) => {
         "session_data" : {}
       }
     };
-
-    console.log("destination - ");
-    console.log(req.body.queryResult.parameters.destination);
     
     if(req.body.queryResult.parameters.destination){
       offerTypesInput.body.session_data = {
