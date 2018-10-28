@@ -171,7 +171,36 @@ app.post('/fulfillment', (req, res) => {
   } 
   else if(req.body.queryResult.action == "input.offertype"){
     console.log("in offertype");
-    console.log(req.body.originalDetectIntentRequest.payload);
+
+    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+    options.body.context.pos = req.body.originalDetectIntentRequest.payload.pos;
+    options.body.context.type = "VIEW";
+    options.body.context.page = req.body.originalDetectIntentRequest.payload.page;
+    
+    
+    if(req.body.queryResult.parameters.destination != null){
+      options.body.context.session_data = {
+        "offerType" : "destination",
+        "numOffers" : "3"
+      };
+    }
+    else if(req.body.queryResult.parameters.experience != null){
+      options.body.context.session_data = {
+        "offerType" : "experience",
+        "numOffers" : "3"
+      };
+    }
+    else if(req.body.queryResult.parameters.product != null){
+      options.body.context.session_data = {
+        "offerType" : "product",
+        "numOffers" : "3"
+      };
+    }
+    console.log("here are the options");
+    console.log(options);
   }
   else {
     res.json(Errresponse);
