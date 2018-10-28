@@ -212,7 +212,7 @@ app.post('/fulfillment', (req, res) => {
     }
     console.log("here are the offerTypesInput");
     console.log(offerTypesInput);
-    request(offerTypesInput);
+
 
 
     options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
@@ -224,8 +224,20 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.region = "scenario1";
 
     console.log("options");
-    console.log(options);
-      
+    console.log(options); 
+
+    request(options)
+      .then(function (response) {
+        // Handle the response
+        // console.log(response)
+        console.log("In ANOTHER OPTIONS");
+        console.log("ANOTHER Offers Response");
+        console.log(response);
+      })
+      .catch(function (err) {
+        // Deal with the error
+        res.json(Errresponse);
+      })
 
   }
   else {
