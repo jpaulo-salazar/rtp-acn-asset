@@ -180,7 +180,6 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.type = "VIEW";
     options.body.context.page = req.body.originalDetectIntentRequest.payload.page;
     
-    
     if(req.body.queryResult.parameters.destination != null){
       options.body.context.session_data = {
         offerType : "destination",
@@ -191,7 +190,7 @@ app.post('/fulfillment', (req, res) => {
       options.body.context.session_data = {
          offerType : "experience",
          numOffers : "3"
-      };
+      }
     }
     else if(req.body.queryResult.parameters.product != null){
       options.body.context.session_data = {
