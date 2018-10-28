@@ -213,7 +213,11 @@ app.post('/fulfillment', (req, res) => {
     console.log("here are the offerTypesInput");
     console.log(offerTypesInput);
 
-    request(offerTypesInput);
+    request(offerTypesInput)
+      .catch(function (err) {
+      // Deal with the error
+      res.json(Errresponse);
+    })
     console.log("after offerTypesInput");
 
 
@@ -222,7 +226,7 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
     options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
     options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
-    options.body.context.uri = req.body.originalDetectIntentRequest.payload.page;
+    options.body.context.uri = "chatbot";
     options.body.context.region = "scenario1";
 
     console.log("options");
