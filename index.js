@@ -213,6 +213,8 @@ app.post('/fulfillment', (req, res) => {
     console.log("here are the offerTypesInput");
     console.log(offerTypesInput);
 
+    request(offerTypesInput);
+    console.log("after offerTypesInput");
 
 
     options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
