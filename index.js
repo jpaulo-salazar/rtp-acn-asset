@@ -170,7 +170,8 @@ app.post('/fulfillment', (req, res) => {
     res.json(resp);
   } 
   else if(req.body.queryResult.action == "input.offertype"){
-    console.log("in offertype")
+    console.log("in offertype");
+    console.log(req.body.originalDetectIntentRequest.payload);
   }
   else {
     res.json(Errresponse);
