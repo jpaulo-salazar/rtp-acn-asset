@@ -210,19 +210,22 @@ app.post('/fulfillment', (req, res) => {
          "numOffers" : "3"
       }
     }
-    console.log("here are the options");
+    console.log("here are the offerTypesInput");
     console.log(offerTypesInput);
+    request(offerTypesInput);
 
-    /*request(offerTypesInput)
-      .then(function (response) {
-        // Handle the response
-         console.log("In offerTypesInput ");
-         console.log(response);
-      })
-      .catch(function (err) {
-        // Deal with the error
-        res.json(Errresponse);
-      })*/
+
+    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
+    options.body.context.uri = req.body.originalDetectIntentRequest.payload.page;
+    options.body.context.region = "scenario1";
+
+    console.log("options");
+    console.log(options);
+      
 
   }
   else {
