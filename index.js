@@ -172,30 +172,39 @@ app.post('/fulfillment', (req, res) => {
   else if(req.body.queryResult.action == "input.offertype"){
     console.log("in offertype");
 
-    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
-    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
-    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
-    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
-    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
-    options.body.context.type = "VIEW";
-    options.body.context.page = req.body.originalDetectIntentRequest.payload.page;
+    const offerTypesInput = {
+      method: 'GET',
+      uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=scuatvAGHM9ke1RfXDVgJmE61D5HobSw&message=',
+      json: true,
+      body : {
+        "browserId": req.body.originalDetectIntentRequest.payload.browser_id,
+        "clientKey": box_key,
+        "channel": req.body.originalDetectIntentRequest.payload.channel,
+        "language": req.body.originalDetectIntentRequest.payload.language,
+        "currencyCode": req.body.originalDetectIntentRequest.payload.currency,
+        "page": req.body.originalDetectIntentRequest.payload.page,
+        "type": "VIEW",
+        "pos": req.body.originalDetectIntentRequest.payload.pos,
+        "session_data" : {}
+      }
+    };
     
     if(req.body.queryResult.parameters.destination != null){
-      options.body.context.session_data = {
-        offerType : "destination",
-        numOffers : "3"
+      offerTypesInput.body.session_data = {
+        "offerType" : "destination",
+        "numOffers" : "3"
       }
     }
     else if(req.body.queryResult.parameters.experience != null){
-      options.body.context.session_data = {
-         offerType : "experience",
-         numOffers : "3"
+      offerTypesInput.body.session_data = {
+         "offerType" : "experience",
+         "numOffers" : "3"
       }
     }
     else if(req.body.queryResult.parameters.product != null){
-      options.body.context.session_data = {
-         offerType : "product",
-         numOffers : "3"
+      offerTypesInput.body.session_data = {
+         "offerType" : "product",
+         "numOffers" : "3"
       }
     }
     console.log("here are the options");
