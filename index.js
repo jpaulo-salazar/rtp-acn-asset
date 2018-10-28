@@ -208,7 +208,7 @@ app.post('/fulfillment', (req, res) => {
       }
     }
     console.log("here are the options");
-    console.log(options);
+    console.log(offerTypesInput);
   }
   else {
     res.json(Errresponse);
