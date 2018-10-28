@@ -192,19 +192,19 @@ app.post('/fulfillment', (req, res) => {
     if(req.body.queryResult.parameters.destination){
       offerTypesInput.body.session_data = {
         "offerType" : "destination",
-        "numOffers" : "3"
+        "numOffers" : req.body.queryResult.parameters.numOffers ? req.body.queryResult.parameters.numOffers : "3"
       }
     }
     else if(req.body.queryResult.parameters.experience){
       offerTypesInput.body.session_data = {
          "offerType" : "experience",
-         "numOffers" : "3"
+         "numOffers" : req.body.queryResult.parameters.numOffers ? req.body.queryResult.parameters.numOffers : "3"
       }
     }
     else if(req.body.queryResult.parameters.product){
       offerTypesInput.body.session_data = {
          "offerType" : "product",
-         "numOffers" : "3"
+         "numOffers" : req.body.queryResult.parameters.numOffers ? req.body.queryResult.parameters.numOffers : "3"
       }
     }
     console.log("here are the offerTypesInput");
