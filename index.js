@@ -176,28 +176,28 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
     options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
     options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
-    options.body.context.pos = req.body.originalDetectIntentRequest.payload.pos;
+    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
     options.body.context.type = "VIEW";
     options.body.context.page = req.body.originalDetectIntentRequest.payload.page;
     
     
     if(req.body.queryResult.parameters.destination != null){
       options.body.context.session_data = {
-        "offerType" : "destination",
-        "numOffers" : "3"
-      };
+        offerType : "destination",
+        numOffers : "3"
+      }
     }
     else if(req.body.queryResult.parameters.experience != null){
       options.body.context.session_data = {
-        "offerType" : "experience",
-        "numOffers" : "3"
+         offerType : "experience",
+         numOffers : "3"
       };
     }
     else if(req.body.queryResult.parameters.product != null){
       options.body.context.session_data = {
-        "offerType" : "product",
-        "numOffers" : "3"
-      };
+         offerType : "product",
+         numOffers : "3"
+      }
     }
     console.log("here are the options");
     console.log(options);
