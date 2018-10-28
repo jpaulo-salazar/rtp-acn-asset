@@ -168,7 +168,11 @@ app.post('/fulfillment', (req, res) => {
 
     }
     res.json(resp);
-  } else {
+  } 
+  else if(req.body.queryResult.action == "input.offertype"){
+    console.log("in offertype")
+  }
+  else {
     res.json(Errresponse);
   }
 
