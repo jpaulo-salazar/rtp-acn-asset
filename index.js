@@ -100,7 +100,7 @@ app.post('/fulfillment', (req, res) => {
                 templateId: "7",
                 payload: {
                   headerImgSrc: response.result.offers[0].attributes.ImageUrl,
-                  headerText: "Test Header Text",
+                  headerText: "Destinations",
                   elements: [{
                     imgSrc: response.result.offers[0].attributes.ImageUrl,
                     title: response.result.offers[0].attributes.Name,
