@@ -168,7 +168,82 @@ app.post('/fulfillment', (req, res) => {
 
     }
     res.json(resp);
-  } else {
+  } 
+  else if(req.body.queryResult.action == "input.offertype"){
+    console.log("in offertype");
+
+    const offerTypesInput = {
+      method: 'GET',
+      uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=scuatvAGHM9ke1RfXDVgJmE61D5HobSw&message=',
+      json: true,
+      body : {
+        "browserId": req.body.originalDetectIntentRequest.payload.browser_id,
+        "clientKey": box_key,
+        "channel": req.body.originalDetectIntentRequest.payload.channel,
+        "language": req.body.originalDetectIntentRequest.payload.language,
+        "currencyCode": req.body.originalDetectIntentRequest.payload.currency,
+        "page": req.body.originalDetectIntentRequest.payload.page,
+        "type": "VIEW",
+        "pos": req.body.originalDetectIntentRequest.payload.pos,
+        "session_data" : {}
+      }
+    };
+    
+    if(req.body.queryResult.parameters.destination){
+      offerTypesInput.body.session_data = {
+        "offerType" : "destination",
+        "numOffers" : req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+      }
+    }
+    else if(req.body.queryResult.parameters.experience){
+      offerTypesInput.body.session_data = {
+         "offerType" : "experience",
+         "numOffers" : req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+      }
+    }
+    else if(req.body.queryResult.parameters.product){
+      offerTypesInput.body.session_data = {
+         "offerType" : "product",
+         "numOffers" : req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+      }
+    }
+    console.log("here are the offerTypesInput");
+    console.log(offerTypesInput);
+
+    request(offerTypesInput)
+      .catch(function (err) {
+      // Deal with the error
+      res.json(Errresponse);
+    })
+    console.log("after offerTypesInput");
+
+
+    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
+    options.body.context.uri = "chatbot";
+    options.body.context.region = "scenario1";
+
+    console.log("options");
+    console.log(options); 
+
+    request(options)
+      .then(function (response) {
+        // Handle the response
+        // console.log(response)
+        console.log("In ANOTHER OPTIONS");
+        console.log("ANOTHER Offers Response");
+        console.log(response);
+      })
+      .catch(function (err) {
+        // Deal with the error
+        res.json(Errresponse);
+      })
+
+  }
+  else {
     res.json(Errresponse);
   }
 
