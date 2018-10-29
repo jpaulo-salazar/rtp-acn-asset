@@ -52,6 +52,7 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
     options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
     options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
+    
     //console.log("Identity Event");
     //request(identity_event)
     // .then(function (response) {
@@ -102,25 +103,25 @@ app.post('/fulfillment', (req, res) => {
                   headerImgSrc: response.result.offers[0].attributes.ImageUrl,
                   headerText: "Destinations",
                   elements: [{
-                    imgSrc: response.result.offers[0].attributes.ImageUrl,
-                    title: response.result.offers[0].attributes.Name,
-                    description: response.result.offers[0].description,
-                    action: {
-                      url: response.result.offers[0].attributes.LinkUrl,
-                      type: "link"
+                      imgSrc: response.result.offers[0].attributes.ImageUrl,
+                      title: response.result.offers[0].attributes.Name,
+                      description: response.result.offers[0].description,
+                      action: {
+                        url: response.result.offers[0].attributes.LinkUrl,
+                        type: "link"
+                      }
+                    },
+                    {
+                      imgSrc: response.result.offers[1].attributes.ImageUrl,
+                      title: response.result.offers[1].attributes.Name,
+                      description: response.result.offers[1].description,
+                      action: {
+                        url: response.result.offers[1].attributes.LinkUrl,
+                        type: "link"
+                      }
                     }
-                  },
-                  {
-                    imgSrc: response.result.offers[1].attributes.ImageUrl,
-                    title: response.result.offers[1].attributes.Name,
-                    description: response.result.offers[1].description,
-                    action: {
-                      url: response.result.offers[1].attributes.LinkUrl,
-                      type: "link"
-                    }
-                  }
 
-                ],
+                  ],
                   buttons: [{
                     name: "See us on facebook",
                     action: {
@@ -168,15 +169,14 @@ app.post('/fulfillment', (req, res) => {
 
     }
     res.json(resp);
-  } 
-  else if(req.body.queryResult.action == "input.offertype"){
+  } else if (req.body.queryResult.action == "input.offertype") {
     console.log("in offertype");
 
     const offerTypesInput = {
       method: 'GET',
       uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=scuatvAGHM9ke1RfXDVgJmE61D5HobSw&message=',
       json: true,
-      body : {
+      body: {
         "browserId": req.body.originalDetectIntentRequest.payload.browser_id,
         "clientKey": box_key,
         "channel": req.body.originalDetectIntentRequest.payload.channel,
@@ -185,26 +185,24 @@ app.post('/fulfillment', (req, res) => {
         "page": req.body.originalDetectIntentRequest.payload.page,
         "type": "VIEW",
         "pos": req.body.originalDetectIntentRequest.payload.pos,
-        "session_data" : {}
+        "session_data": {}
       }
     };
-    
-    if(req.body.queryResult.parameters.destination){
+
+    if (req.body.queryResult.parameters.destination) {
       offerTypesInput.body.session_data = {
-        "offerType" : "destination",
-        "numOffers" : req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+        "offerType": "destination",
+        "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
       }
-    }
-    else if(req.body.queryResult.parameters.experience){
+    } else if (req.body.queryResult.parameters.experience) {
       offerTypesInput.body.session_data = {
-         "offerType" : "experience",
-         "numOffers" : req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+        "offerType": "experience",
+        "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
       }
-    }
-    else if(req.body.queryResult.parameters.product){
+    } else if (req.body.queryResult.parameters.product) {
       offerTypesInput.body.session_data = {
-         "offerType" : "product",
-         "numOffers" : req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+        "offerType": "product",
+        "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
       }
     }
     console.log("here are the offerTypesInput");
@@ -212,9 +210,9 @@ app.post('/fulfillment', (req, res) => {
 
     request(offerTypesInput)
       .catch(function (err) {
-      // Deal with the error
-      res.json(Errresponse);
-    })
+        // Deal with the error
+        res.json(Errresponse);
+      })
     console.log("after offerTypesInput");
 
 
@@ -227,7 +225,7 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.region = "scenario1";
 
     console.log("options");
-    console.log(options); 
+    console.log(options);
 
     request(options)
       .then(function (response) {
@@ -242,8 +240,78 @@ app.post('/fulfillment', (req, res) => {
         res.json(Errresponse);
       })
 
-  }
-  else {
+  } else if (req.body.queryResult.action == "input.loyalty") {
+    console.log(req.body.originalDetectIntentRequest.payload);
+    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
+    options.body.context.uri = "chatbot",
+    options.body.context.region = "scenario2";
+    request(options)
+      .then(function (response) {
+        // Handle the response
+        // console.log(response)
+        console.log("In Loyalty");
+       // console.log("Loyalty Response")
+        //console.log(response);
+        var length = response.result.offers.length;
+        console.log("length = " + length);
+        let resp = {
+          fulfillmentText: response.result.offers[0].attributes.Name,
+          fulfillmentMessages: [{
+            payload: {
+              message: "I've picked these just for you",
+              ignoreTextResponse: false,
+              platform: "kommunicate",
+              metadata: {
+                contentType: "300",
+                templateId: "7",
+                payload: {
+                  headerImgSrc: response.result.offers[0].attributes.ImageUrl,
+                  headerText: "Destinations",
+                  elements: [{
+                      imgSrc: response.result.offers[0].attributes.ImageUrl,
+                      title: response.result.offers[0].attributes.Name,
+                      description: response.result.offers[0].description,
+                      action: {
+                        url: response.result.offers[0].attributes.LinkUrl,
+                        type: "link"
+                      }
+                    },
+                    {
+                      imgSrc: response.result.offers[1].attributes.ImageUrl,
+                      title: response.result.offers[1].attributes.Name,
+                      description: response.result.offers[1].description,
+                      action: {
+                        url: response.result.offers[1].attributes.LinkUrl,
+                        type: "link"
+                      }
+                    }
+
+                  ],
+                  buttons: [{
+                    name: "See us on facebook",
+                    action: {
+                      url: "https://www.google.com",
+                      type: "link"
+                    }
+                  }]
+                }
+
+              }
+            }
+          }, ]
+        };
+        console.log(resp);
+        res.json(resp);
+      })
+      .catch(function (err) {
+        // Deal with the error
+        res.json(Errresponse);
+      })
+  } else {
     res.json(Errresponse);
   }
 
