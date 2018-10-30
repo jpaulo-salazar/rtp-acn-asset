@@ -263,7 +263,7 @@ app.post('/fulfillment', (req, res) => {
       request(options)
       .then(function(response){
           console.log("in second call - options");
-          console.log(response);
+          console.log(JSON.stringify(response));
       })
       .catch(function(err){
         res.json(Errresponse);
