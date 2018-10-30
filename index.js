@@ -260,6 +260,8 @@ app.post('/fulfillment', (req, res) => {
                 }
               }, ]
             };
+            console.log(resp);
+            res.json(resp);
           })
           .catch(function (err) {
             res.json(Errresponse);
