@@ -52,7 +52,7 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
     options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
     options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
-    
+
     //console.log("Identity Event");
     //request(identity_event)
     // .then(function (response) {
@@ -162,7 +162,7 @@ app.post('/fulfillment', (req, res) => {
       fulfillmentText: ""
     };
     if (req.body.originalDetectIntentRequest.payload.firstname != null) {
-      resp.fulfillmentText = "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you?"
+      resp.fulfillmentText = "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you? \n Would you like me to inspire you with a travel destination, an experience or a product you’ll probably love? BTW, I also have some exclusive offers just for your too!  "
 
     } else {
       resp.fulfillmentText = "Hello! How can I help you?"
@@ -170,61 +170,102 @@ app.post('/fulfillment', (req, res) => {
     }
     res.json(resp);
   } else if (req.body.queryResult.action == "input.offertype") {
-      var offType = "";
-      var noOfOffers = "";
-      if (req.body.queryResult.parameters.destination) {
-        offType = "destination";
-        noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
-      }
-      else if(req.body.queryResult.parameters.experience){
-        offType = "experience";
-        noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
-      }
-      else if(req.body.queryResult.parameters.product){
-        offType = "product";
-        noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
-      }
+    var offType = "";
+    var noOfOffers = "";
+    if (req.body.queryResult.parameters.destination) {
+      offType = "destination";
+      noOfOffers = req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
+    } else if (req.body.queryResult.parameters.experience) {
+      offType = "experience";
+      noOfOffers = req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
+    } else if (req.body.queryResult.parameters.product) {
+      offType = "product";
+      noOfOffers = req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
+    }
 
-      const offerTypesInput = {
-        method: 'GET',
-        uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key='+box_key+
-                '&message={"browser_id":"'+req.body.originalDetectIntentRequest.payload.browser_id+'",'+
-                '"channel":"'+req.body.originalDetectIntentRequest.payload.channel+'",'+
-                '"type":"VIEW",'+
-                '"language":"'+req.body.originalDetectIntentRequest.payload.language+'",'+
-                '"currency":"'+req.body.originalDetectIntentRequest.payload.currency+'",'+
-                '"page":"'+req.body.originalDetectIntentRequest.payload.page+'",'+
-                '"pos":"'+req.body.originalDetectIntentRequest.payload.pos+'",'+
-                '"session_data":{"offerType":"'+offType+'",'+
-                                  '"numOffers":"'+noOfOffers+'"}}'
-      };
+    const offerTypesInput = {
+      method: 'GET',
+      uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=' + box_key +
+        '&message={"browser_id":"' + req.body.originalDetectIntentRequest.payload.browser_id + '",' +
+        '"channel":"' + req.body.originalDetectIntentRequest.payload.channel + '",' +
+        '"type":"VIEW",' +
+        '"language":"' + req.body.originalDetectIntentRequest.payload.language + '",' +
+        '"currency":"' + req.body.originalDetectIntentRequest.payload.currency + '",' +
+        '"page":"' + req.body.originalDetectIntentRequest.payload.page + '",' +
+        '"pos":"' + req.body.originalDetectIntentRequest.payload.pos + '",' +
+        '"session_data":{"offerType":"' + offType + '",' +
+        '"numOffers":"' + noOfOffers + '"}}'
+    };
 
-      options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
-      options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
-      options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
-      options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
-      options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
-      options.body.context.uri = "chatbot";
-      options.body.context.region = "scenario1";
+    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
+    options.body.context.uri = "chatbot";
+    options.body.context.region = "scenario1";
 
-      console.log("#### OFFERTYPESINPUT ####");
-      console.log(offerTypesInput);
+    console.log("#### OFFERTYPESINPUT ####");
+    console.log(offerTypesInput);
 
-      request(offerTypesInput)
-      .then(function(response){
+    request(offerTypesInput)
+      .then(function (response) {
         console.log("in first call - offerTypesInput");
         console.log("#### OPTIONS ####");
         console.log(options);
         request(options)
-        .then(function(response){
+          .then(function (response) {
             console.log("in second call - options");
             console.log(JSON.stringify(response));
-        })
-        .catch(function(err){
-          res.json(Errresponse);
-        })
+            var length = response.result.offers.length;
+            console.log("length = " + length);
+            let elements = [];
+            for (var i = 0; i < length; i++) {
+              let data = {
+                imgSrc: response.result.offers[i].attributes.ImageUrl,
+                title: response.result.offers[i].attributes.Name,
+                description: response.result.offers[i].description,
+                action: {
+                  url: response.result.offers[i].attributes.LinkUrl,
+                  type: "link"
+                }
+
+              }
+              elements.push(data);
+            }
+            let resp = {
+              fulfillmentText: response.result.offers[0].attributes.Name,
+              fulfillmentMessages: [{
+                payload: {
+                  message: "I've picked these just for you",
+                  ignoreTextResponse: false,
+                  platform: "kommunicate",
+                  metadata: {
+                    contentType: "300",
+                    templateId: "7",
+                    payload: {
+                      headerImgSrc: response.result.offers[0].attributes.ImageUrl,
+                      headerText: offType,
+                      elements: elements,
+                      buttons: [{
+                        name: "See us on facebook",
+                        action: {
+                          url: "https://www.google.com",
+                          type: "link"
+                        }
+                      }]
+                    }
+
+                  }
+                }
+              }, ]
+            };
+          })
+          .catch(function (err) {
+            res.json(Errresponse);
+          })
       })
-      .catch(function(err){
+      .catch(function (err) {
         res.json(Errresponse);
       })
 
@@ -236,13 +277,13 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
     options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
     options.body.context.uri = "chatbot",
-    options.body.context.region = "scenario2";
+      options.body.context.region = "scenario2";
     request(options)
       .then(function (response) {
         // Handle the response
         // console.log(response)
         console.log("In Loyalty");
-       // console.log("Loyalty Response")
+        // console.log("Loyalty Response")
         //console.log(response);
         var length = response.result.offers.length;
         console.log("length = " + length);
