@@ -170,121 +170,63 @@ app.post('/fulfillment', (req, res) => {
     }
     res.json(resp);
   } else if (req.body.queryResult.action == "input.offertype") {
-    console.log("in offertype");
-
-    var offType = "";
-    var noOfOffers = "";
-    if (req.body.queryResult.parameters.destination) {
-      offType = "destination";
-      noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
-    }
-    else if(req.body.queryResult.parameters.experience){
-      offType = "experience";
-      noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
-    }
-    else if(req.body.queryResult.parameters.product){
-      offType = "product";
-      noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
-    }
-
-    const offerTypesInput = {
-      method: 'GET',
-      uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key='+box_key+
-              '&message={"browser_id":"'+req.body.originalDetectIntentRequest.payload.browser_id+'",'+
-              '"channel":"'+req.body.originalDetectIntentRequest.payload.channel+'",'+
-              '"type":"VIEW",'+
-              '"language":"'+req.body.originalDetectIntentRequest.payload.language+'",'+
-              '"currency":"'+req.body.originalDetectIntentRequest.payload.currency+'",'+
-              '"page":"'+req.body.originalDetectIntentRequest.payload.page+'",'+
-              '"pos":"'+req.body.originalDetectIntentRequest.payload.pos+'",'+
-              '"session_data":{"offerType":"'+offType+'",'+
-                                '"numOffers":"'+noOfOffers+'"}}'
-    };
-     // json: true,
-      /*body: {
-        "browserId": req.body.originalDetectIntentRequest.payload.browser_id,
-        "clientKey": box_key,
-        "channel": req.body.originalDetectIntentRequest.payload.channel,
-        "language": req.body.originalDetectIntentRequest.payload.language,
-        "currencyCode": req.body.originalDetectIntentRequest.payload.currency,
-        "page": req.body.originalDetectIntentRequest.payload.page,
-        "type": "VIEW",
-        "pos": req.body.originalDetectIntentRequest.payload.pos,
-        "session_data": {}
-      }*/
-  
-
-    /*if (req.body.queryResult.parameters.destination) {
-      offerTypesInput.body.session_data = {
-        "offerType": "destination",
-        "numOffers": req.body.queryResult.parameters.numberofoffers ? parseInt(req.body.queryResult.parameters.numberofoffers) : 3
+      var offType = "";
+      var noOfOffers = "";
+      if (req.body.queryResult.parameters.destination) {
+        offType = "destination";
+        noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
       }
-    } else if (req.body.queryResult.parameters.experience) {
-      offerTypesInput.body.session_data = {
-        "offerType": "experience",
-        "numOffers": req.body.queryResult.parameters.numberofoffers ? parseInt(req.body.queryResult.parameters.numberofoffers) : 3
+      else if(req.body.queryResult.parameters.experience){
+        offType = "experience";
+        noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
       }
-    } else if (req.body.queryResult.parameters.product) {
-      offerTypesInput.body.session_data = {
-        "offerType": "product",
-        "numOffers": req.body.queryResult.parameters.numberofoffers ? parseInt(req.body.queryResult.parameters.numberofoffers) : 3
+      else if(req.body.queryResult.parameters.product){
+        offType = "product";
+        noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
       }
-    }*/
-    /*console.log("here are the offerTypesInput");
-    console.log(offerTypesInput);
 
-    request(offerTypesInput)
-      .catch(function (err) {
-        // Deal with the error
-        res.json(Errresponse);
-      })
-    console.log("after offerTypesInput");*/
+      const offerTypesInput = {
+        method: 'GET',
+        uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key='+box_key+
+                '&message={"browser_id":"'+req.body.originalDetectIntentRequest.payload.browser_id+'",'+
+                '"channel":"'+req.body.originalDetectIntentRequest.payload.channel+'",'+
+                '"type":"VIEW",'+
+                '"language":"'+req.body.originalDetectIntentRequest.payload.language+'",'+
+                '"currency":"'+req.body.originalDetectIntentRequest.payload.currency+'",'+
+                '"page":"'+req.body.originalDetectIntentRequest.payload.page+'",'+
+                '"pos":"'+req.body.originalDetectIntentRequest.payload.pos+'",'+
+                '"session_data":{"offerType":"'+offType+'",'+
+                                  '"numOffers":"'+noOfOffers+'"}}'
+      };
 
+      options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
+      options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
+      options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
+      options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
+      options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
+      options.body.context.uri = "chatbot";
+      options.body.context.region = "scenario1";
 
-    options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
-    options.body.context.channel = req.body.originalDetectIntentRequest.payload.channel;
-    options.body.context.currencyCode = req.body.originalDetectIntentRequest.payload.currency;
-    options.body.context.language = req.body.originalDetectIntentRequest.payload.language;
-    options.body.context.pointOfSale = req.body.originalDetectIntentRequest.payload.pos;
-    options.body.context.uri = "chatbot";
-    options.body.context.region = "scenario1";
+      console.log("#### OFFERTYPESINPUT ####");
+      console.log(offerTypesInput);
 
-   // console.log("options");
-    //console.log(options);
-
-    console.log("#### OFFERTYPESINPUT ####");
-    console.log(offerTypesInput);
-
-    request(offerTypesInput)
-    .then(function(response){
-      console.log("in first call - offerTypesInput");
-      console.log("#### OPTIONS ####");
-      console.log(options);
-      request(options)
+      request(offerTypesInput)
       .then(function(response){
-          console.log("in second call - options");
-          console.log(JSON.stringify(response));
+        console.log("in first call - offerTypesInput");
+        console.log("#### OPTIONS ####");
+        console.log(options);
+        request(options)
+        .then(function(response){
+            console.log("in second call - options");
+            console.log(JSON.stringify(response));
+        })
+        .catch(function(err){
+          res.json(Errresponse);
+        })
       })
       .catch(function(err){
         res.json(Errresponse);
       })
-    })
-    .catch(function(err){
-      res.json(Errresponse);
-    })
-
-    /*request(options)
-      .then(function (response) {
-        // Handle the response
-        // console.log(response)
-        console.log("In ANOTHER OPTIONS");
-        console.log("ANOTHER Offers Response");
-        console.log(response);
-      })
-      .catch(function (err) {
-        // Deal with the error
-        res.json(Errresponse);
-      })*/
 
   } else if (req.body.queryResult.action == "input.loyalty") {
     console.log(req.body.originalDetectIntentRequest.payload);
