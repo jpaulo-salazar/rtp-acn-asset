@@ -205,7 +205,7 @@ app.post('/fulfillment', (req, res) => {
         "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
       }
     }
-    console.log("here are the offerTypesInput");
+    /*console.log("here are the offerTypesInput");
     console.log(offerTypesInput);
 
     request(offerTypesInput)
@@ -213,7 +213,7 @@ app.post('/fulfillment', (req, res) => {
         // Deal with the error
         res.json(Errresponse);
       })
-    console.log("after offerTypesInput");
+    console.log("after offerTypesInput");*/
 
 
     options.body.context.browserId = req.body.originalDetectIntentRequest.payload.browser_id;
@@ -224,10 +224,30 @@ app.post('/fulfillment', (req, res) => {
     options.body.context.uri = "chatbot";
     options.body.context.region = "scenario1";
 
-    console.log("options");
-    console.log(options);
+   // console.log("options");
+    //console.log(options);
 
-    request(options)
+    console.log("#### OFFERTYPESINPUT ####");
+    console.log(offerTypesInput);
+
+    request(offerTypesInput)
+    .then(function(response){
+      console.log("in first call - offerTypesInput");
+      console.log("#### OPTIONS ####");
+      console.log(options);
+      request(options)
+      .then(function(response){
+          console.log("in second call - options");
+      })
+      .catch(function(err){
+        res.json(Errresponse);
+      })
+    })
+    .catch(function(err){
+      res.json(Errresponse);
+    })
+
+    /*request(options)
       .then(function (response) {
         // Handle the response
         // console.log(response)
@@ -238,7 +258,7 @@ app.post('/fulfillment', (req, res) => {
       .catch(function (err) {
         // Deal with the error
         res.json(Errresponse);
-      })
+      })*/
 
   } else if (req.body.queryResult.action == "input.loyalty") {
     console.log(req.body.originalDetectIntentRequest.payload);
