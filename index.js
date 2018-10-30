@@ -162,7 +162,7 @@ app.post('/fulfillment', (req, res) => {
       fulfillmentText: ""
     };
     if (req.body.originalDetectIntentRequest.payload.firstname != null) {
-      resp.fulfillmentText = "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you? \n Would you like me to inspire you with a travel destination, an experience or a product you’ll probably love? BTW, I also have some exclusive offers just for your too!  "
+      resp.fulfillmentText = "Hello " + req.body.originalDetectIntentRequest.payload.firstname + "! How can I help you? \nWould you like me to inspire you with a travel destination, an experience or a product you’ll probably love? BTW, I also have some exclusive offers just for your too!  "
 
     } else {
       resp.fulfillmentText = "Hello! How can I help you?"
@@ -240,7 +240,7 @@ app.post('/fulfillment', (req, res) => {
               fulfillmentText: response.result.offers[0].attributes.Name,
               fulfillmentMessages: [{
                 payload: {
-                  message: "I bet you’ll like these " + offType + "(s)",
+                  message: "I bet you’ll like these " + offType + "(s) \nClick to know more if any of these "+ offType + "(s) strikes your fancy. " ,
                   ignoreTextResponse: false,
                   platform: "kommunicate",
                   metadata: {
@@ -250,13 +250,13 @@ app.post('/fulfillment', (req, res) => {
                       headerImgSrc: response.result.offers[0].attributes.ImageUrl,
                       headerText: offType,
                       elements: elements,
-                      buttons: [{
+                      /* buttons: [{
                         name: "See us on facebook",
                         action: {
                           url: "https://www.google.com",
                           type: "link"
                         }
-                      }]
+                      }] */
                     }
 
                   }
@@ -292,11 +292,28 @@ app.post('/fulfillment', (req, res) => {
         //console.log(response);
         var length = response.result.offers.length;
         console.log("length = " + length);
+        if (noOfOffers < length) {
+          length = noOfOffers;
+        } 
+        let elements = [];
+        for (var i = 0; i < length; i++) {
+          let data = {
+            imgSrc: response.result.offers[i].attributes.ImageUrl,
+            title: response.result.offers[i].attributes.Name,
+            description: response.result.offers[i].description,
+            action: {
+              url: response.result.offers[i].attributes.LinkUrl,
+              type: "link"
+            }
+
+          }
+          elements.push(data);
+        }
         let resp = {
           fulfillmentText: response.result.offers[0].attributes.Name,
           fulfillmentMessages: [{
             payload: {
-              message: "I've picked these just for you",
+              message: "I've picked these just for you \nLike any of them? Click on the visuals if any of these exclusives strikes your fancy.",
               ignoreTextResponse: false,
               platform: "kommunicate",
               metadata: {
@@ -305,26 +322,7 @@ app.post('/fulfillment', (req, res) => {
                 payload: {
                   headerImgSrc: response.result.offers[0].attributes.ImageUrl,
                   headerText: "Destinations",
-                  elements: [{
-                      imgSrc: response.result.offers[0].attributes.ImageUrl,
-                      title: response.result.offers[0].attributes.Name,
-                      description: response.result.offers[0].description,
-                      action: {
-                        url: response.result.offers[0].attributes.LinkUrl,
-                        type: "link"
-                      }
-                    },
-                    {
-                      imgSrc: response.result.offers[1].attributes.ImageUrl,
-                      title: response.result.offers[1].attributes.Name,
-                      description: response.result.offers[1].description,
-                      action: {
-                        url: response.result.offers[1].attributes.LinkUrl,
-                        type: "link"
-                      }
-                    }
-
-                  ],
+                  elements: elements,
                   buttons: [{
                     name: "See us on facebook",
                     action: {
