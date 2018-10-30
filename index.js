@@ -219,6 +219,9 @@ app.post('/fulfillment', (req, res) => {
             console.log(JSON.stringify(response));
             var length = response.result.offers.length;
             console.log("length = " + length);
+            if (noOfOffers < length) {
+              length = noOfOffers;
+            } 
             let elements = [];
             for (var i = 0; i < length; i++) {
               let data = {
@@ -237,7 +240,7 @@ app.post('/fulfillment', (req, res) => {
               fulfillmentText: response.result.offers[0].attributes.Name,
               fulfillmentMessages: [{
                 payload: {
-                  message: "I've picked these just for you",
+                  message: "I bet you’ll like these " + offType + "(s)",
                   ignoreTextResponse: false,
                   platform: "kommunicate",
                   metadata: {
