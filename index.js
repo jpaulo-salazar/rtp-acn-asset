@@ -198,7 +198,7 @@ app.post('/fulfillment', (req, res) => {
               '"page":"'+req.body.originalDetectIntentRequest.payload.page+'",'+
               '"pos":"'+req.body.originalDetectIntentRequest.payload.pos+'",'+
               '"session_data":{"offerType":"'+offType+'",'+
-                                '"numOffers":"'+noOfOffers+'"}'
+                                '"numOffers":"'+noOfOffers+'"}}'
     };
      // json: true,
       /*body: {
