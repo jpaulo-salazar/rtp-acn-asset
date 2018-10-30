@@ -199,6 +199,7 @@ app.post('/fulfillment', (req, res) => {
               '"pos":"'+req.body.originalDetectIntentRequest.payload.pos+'",'+
               '"session_data":{"offerType":"'+offType+'",'+
                                 '"numOffers":"'+noOfOffers+'"}'
+    };
      // json: true,
       /*body: {
         "browserId": req.body.originalDetectIntentRequest.payload.browser_id,
@@ -211,7 +212,7 @@ app.post('/fulfillment', (req, res) => {
         "pos": req.body.originalDetectIntentRequest.payload.pos,
         "session_data": {}
       }*/
-    };
+  
 
     /*if (req.body.queryResult.parameters.destination) {
       offerTypesInput.body.session_data = {
