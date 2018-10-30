@@ -172,11 +172,35 @@ app.post('/fulfillment', (req, res) => {
   } else if (req.body.queryResult.action == "input.offertype") {
     console.log("in offertype");
 
+    var offType = "";
+    var noOfOffers = "";
+    if (req.body.queryResult.parameters.destination) {
+      offType = "destination";
+      noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
+    }
+    else if(req.body.queryResult.parameters.experience){
+      offType = "experience";
+      noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
+    }
+    else if(req.body.queryResult.parameters.product){
+      offType = "product";
+      noOfOffers =  req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3";
+    }
+
     const offerTypesInput = {
       method: 'GET',
-      uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key=scuatvAGHM9ke1RfXDVgJmE61D5HobSw&message=',
-      json: true,
-      body: {
+      uri: 'https://api-ap-southeast-2-production.boxever.com/v1.2/event/create.json?client_key='+box_key+
+              '&message={"browser_id":"'+req.body.originalDetectIntentRequest.payload.browser_id+'",'+
+              '"channel":"'+req.body.originalDetectIntentRequest.payload.channel+'",'+
+              '"type":"VIEW",'+
+              '"language":"'+req.body.originalDetectIntentRequest.payload.language+'",'+
+              '"currency":"'+req.body.originalDetectIntentRequest.payload.currency+'",'+
+              '"page":"'+req.body.originalDetectIntentRequest.payload.page+'",'+
+              '"pos":"'+req.body.originalDetectIntentRequest.payload.pos+'",'+
+              '"session_data":{"offerType":"'+offType+'",'+
+                                '"numOffers":"'+noOfOffers+'"}'
+     // json: true,
+      /*body: {
         "browserId": req.body.originalDetectIntentRequest.payload.browser_id,
         "clientKey": box_key,
         "channel": req.body.originalDetectIntentRequest.payload.channel,
@@ -186,25 +210,25 @@ app.post('/fulfillment', (req, res) => {
         "type": "VIEW",
         "pos": req.body.originalDetectIntentRequest.payload.pos,
         "session_data": {}
-      }
+      }*/
     };
 
-    if (req.body.queryResult.parameters.destination) {
+    /*if (req.body.queryResult.parameters.destination) {
       offerTypesInput.body.session_data = {
         "offerType": "destination",
-        "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+        "numOffers": req.body.queryResult.parameters.numberofoffers ? parseInt(req.body.queryResult.parameters.numberofoffers) : 3
       }
     } else if (req.body.queryResult.parameters.experience) {
       offerTypesInput.body.session_data = {
         "offerType": "experience",
-        "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+        "numOffers": req.body.queryResult.parameters.numberofoffers ? parseInt(req.body.queryResult.parameters.numberofoffers) : 3
       }
     } else if (req.body.queryResult.parameters.product) {
       offerTypesInput.body.session_data = {
         "offerType": "product",
-        "numOffers": req.body.queryResult.parameters.numberofoffers ? req.body.queryResult.parameters.numberofoffers : "3"
+        "numOffers": req.body.queryResult.parameters.numberofoffers ? parseInt(req.body.queryResult.parameters.numberofoffers) : 3
       }
-    }
+    }*/
     /*console.log("here are the offerTypesInput");
     console.log(offerTypesInput);
 
