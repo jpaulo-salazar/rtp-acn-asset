@@ -267,10 +267,12 @@ app.post('/fulfillment', (req, res) => {
             res.json(resp);
           })
           .catch(function (err) {
+            console.log(err);
             res.json(Errresponse);
           })
       })
       .catch(function (err) {
+        console.log(err);
         res.json(Errresponse);
       })
 
@@ -341,6 +343,7 @@ app.post('/fulfillment', (req, res) => {
       })
       .catch(function (err) {
         // Deal with the error
+        console.log(err);
         res.json(Errresponse);
       })
   } else {
