@@ -323,7 +323,7 @@ app.post('/fulfillment', (req, res) => {
                 templateId: "7",
                 payload: {
                   headerImgSrc: response.result.offers[0].attributes.ImageUrl,
-                  headerText: "Destinations",
+                  headerText: response.result.offers[0].attributes.Type,
                   elements: elements,
                   buttons: [{
                     name: "See us on facebook",
