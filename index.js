@@ -323,12 +323,12 @@ app.post('/fulfillment', (req, res) => {
                 templateId: "7",
                 payload: {
                   headerImgSrc: response.result.offers[0].attributes.ImageUrl,
-                  headerText: response.result.offers[0].attributes.Type,
+                  headerText: response.result.offers[0].attributes.Type +"s",
                   elements: elements,
                   buttons: [{
-                    name: "See us on facebook",
+                    name: "Check out our blogs",
                     action: {
-                      url: "https://www.google.com",
+                      url: "https://publish619.adobedemo.com/content/sia/Tokyo-description.html",
                       type: "link"
                     }
                   }]
