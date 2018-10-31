@@ -41,7 +41,7 @@ app.use(bodyParser.json())
 app.post('/fulfillment', (req, res) => {
   console.log(req.body);
   const Errresponse = {
-    fulfillmentText: "Your API call does not work fine !",
+    fulfillmentText: "Oh no! Looks like something went wrong at our end. We apologize for the inconvenience caused. Please try again in some time",
   }
   console.log("action: " + req.body.queryResult.action);
   if (req.body.queryResult.action == "input.offers") {
