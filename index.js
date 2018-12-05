@@ -291,7 +291,7 @@ app.post('/fulfillment', (req, res) => {
         // console.log(response)
         console.log("In Loyalty");
         // console.log("Loyalty Response")
-        //console.log(response);
+        console.log(response);
         var length = response.result.offers.length;
         console.log("length = " + length);
         if (noOfOffers < length) {
