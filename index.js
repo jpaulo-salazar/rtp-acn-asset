@@ -422,6 +422,63 @@ app.post('/fulfillment', (req, res) => {
         console.log(err);
         res.json(Errresponse);
       })
+  } else if (req.body.queryResult.action == "input.bookflight") { //==================book flight=================
+    console.log(req.body.originalDetectIntentRequest.payload);
+    request(amd_auth_option)
+      .then(function (response) {
+        console.log(response.access_token);
+        amd_test_option.headers.Authorization = "Bearer " + response.access_token;
+        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination=BKK&departureDate=2019-08-01&returnDate=2019-08-28&nonStop=true';
+        request(amd_test_option)
+          .then(function (response) {
+            // Handle the response
+            // console.log(response)
+            console.log("In Book Flight");
+            // console.log("Loyalty Response")
+            console.log(response);
+            let resp = {
+              fulfillmentText: "DAPI Test",
+              fulfillmentMessages: [{
+                payload: {
+                  message: "I've picked these just for you \nLike any of them? Click on the visuals if any of these exclusives strikes your fancy.",
+                  ignoreTextResponse: false,
+                  platform: "kommunicate",
+                  metadata: {
+                    contentType: "300",
+                    templateId: "10",
+                    payload: [{
+                      title: "Card Title",
+                      subtitle: "Card Subtitle ",
+                      header: {
+                        overlayText: "Overlay Text",
+                        imgSrc: "Header image for the card"
+                      },
+                      description: "Description",
+                      titleExt: "title Extension",
+                      buttons: [{
+                        name: "Link Button",
+                        action: {
+                          type: "link",
+                          payload: {
+                            url: "https://www.facebook.com"
+                          }
+                        }
+                      }]
+                    }]
+
+                  }
+                }
+              }, ]
+            };
+            console.log(resp);
+            res.json(resp);
+          })
+          .catch(function (err) {
+            // Deal with the error
+            console.log(err);
+            res.json(Errresponse);
+          })
+      });
   } else {
     res.json(Errresponse);
   }
