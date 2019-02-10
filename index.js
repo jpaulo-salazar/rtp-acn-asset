@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 5000;
 const request = require('request-promise');
 const app = express();
 const box_key = "scuatvAGHM9ke1RfXDVgJmE61D5HobSw";
+var schedule = require('node-schedule');
 const options = {
   method: 'POST',
   uri: 'https://api-ap-southeast-2-production.boxever.com/v2/callFlows',
@@ -23,23 +24,26 @@ const options = {
   json: true
   // JSON stringifies the body automatically
 };
-const amd_auth_option ={
+const amd_auth_option = {
   method: 'POST',
   uri: 'https://test.api.amadeus.com/v1/security/oauth2/token',
-  body: {
-    "client_key": "oaMnCt4svBPFVQQI4FMQRIUz6BzPTnPJ",
-    "client_secret":"y0OJzwkYXjAqfAaG" ,
-    "grant_type":"client_credentials" 
+  /*headers: {
+    "Content-Type":"application/x-www-form-urlencoded"
+  },*/
+  form: {
+    "client_id": "oaMnCt4svBPFVQQI4FMQRIUz6BzPTnPJ",
+    "client_secret": "y0OJzwkYXjAqfAaG",
+    "grant_type": "client_credentials"
   },
   json: true
 
 };
-const amd_test_option ={
+var amd_test_option = {
   method: 'GET',
   uri: 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination=BKK&departureDate=2019-08-01&returnDate=2019-08-28&nonStop=true',
   headers: {
-    "Accept":"application/vnd.amadeus+json" ,
-    "Authorization":"Bearer m1B4IvUE2iRIF8u9GHqXc8GYGQp0"
+    "Accept": "application/vnd.amadeus+json",
+    "Authorization": "Bearer m1B4IvUE2iRIF8u9GHqXc8GYGQp0"
   },
   json: true
 
@@ -61,21 +65,36 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
 //================================================================
 //Testing Amadeues Api
+/*var j = schedule.scheduleJob('14 * * * *', function () {
+  request(amd_auth_option)
+    .then(function (response) {
+      console.log(response.access_token);
+      amd_test_option.headers.Authorization = "Bearer " + response.access_token;
+    })
+    .catch(function (err) {
+      console.log(err);
+    })
+});*/
 app.get('/dapi', (req, res) => {
   console.log(req.body);
   /*request(amd_auth_option)
   .then(function (response){
 
   })*/
-  request(amd_test_option)
-  .then(function (response) {
-    console.log(response);
-    res.json(response);
-      })
-      .catch(function (err) {
-        console.log(err);
-        res.json(err);
-      })
+  request(amd_auth_option)
+    .then(function (response) {
+      console.log(response.access_token);
+      amd_test_option.headers.Authorization = "Bearer " + response.access_token;
+      request(amd_test_option)
+        .then(function (response) {
+          console.log(response);
+          res.json(response);
+        })
+        .catch(function (err) {
+          console.log(err);
+          res.json(err);
+        })
+    });
 });
 //================================================================
 //Testing Campaign call
@@ -84,12 +103,13 @@ app.post('/campaign', (req, res) => {
   var tokenJson = JSON.parse(getToken());
   var token = tokenJson.access_token;
 });
+
 function getToken() {
   var token = request('POST', 'https://ims-na1.adobelogin.com/ims/exchange/jwt/', {
-      headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'client_id=87902aade48947d4a06192428326d847&client_secret=644baa93-8268-40ce-8c83-ab69f9564546&jwt_token=eyJhbGciOiJSUzI1NiJ9.ew0KICAgICJleHAiOiAxNTQ5NTkzNzk2LA0KICAgICJpc3MiOiAiQjhEQzBGQTc1QjQ1Q0FDQjBBNDk1QzQ5QEFkb2JlT3JnIiwNCiAgICAic3ViIjogIjM5NUYxMjJDNUMzQzM2OEQwQTQ5NURBREB0ZWNoYWNjdC5hZG9iZS5jb20iLA0KICAgICJodHRwczovL2ltcy1uYTEuYWRvYmVsb2dpbi5jb20vcy9lbnRfY2FtcGFpZ25fc2RrIjogdHJ1ZSwNCiAgICAiYXVkIjogImh0dHBzOi8vaW1zLW5hMS5hZG9iZWxvZ2luLmNvbS9jLzg3OTAyYWFkZTQ4OTQ3ZDRhMDYxOTI0MjgzMjZkODQ3Ig0KfQ.AyZoPs4yC7S03Td5tsDKCiAej7ARUgQRXb0Bhlr-UAmKG5JFEnNuMX6hEGe5ePiu2r3wTjKEBOJdt6E1QQD4aq1i2VDZObYd15erId5CP-EOmAAIQS5Al9C9cF79Lg4NqOJIcnQ5R2XtQ7EBzDg3EH_Mtw8xwM_oOhxgLAtWrfHQikvd3supC80tGGEtYTG0ApgJMPbMGDAI6yrA1dPZxBv3Xmt2LuQK9ZwoEg3j3HKywYeX9vDq_gsLRXQh_yugOtGGwQ1VD40ZkQeXF09D2yBZqpTQ--SPdMuGm01MqXW47wacxo1Yv2lzg6fBE7RtnD0oPZqdkcMula9PcOR5Rg'
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: 'client_id=87902aade48947d4a06192428326d847&client_secret=644baa93-8268-40ce-8c83-ab69f9564546&jwt_token=eyJhbGciOiJSUzI1NiJ9.ew0KICAgICJleHAiOiAxNTQ5NTkzNzk2LA0KICAgICJpc3MiOiAiQjhEQzBGQTc1QjQ1Q0FDQjBBNDk1QzQ5QEFkb2JlT3JnIiwNCiAgICAic3ViIjogIjM5NUYxMjJDNUMzQzM2OEQwQTQ5NURBREB0ZWNoYWNjdC5hZG9iZS5jb20iLA0KICAgICJodHRwczovL2ltcy1uYTEuYWRvYmVsb2dpbi5jb20vcy9lbnRfY2FtcGFpZ25fc2RrIjogdHJ1ZSwNCiAgICAiYXVkIjogImh0dHBzOi8vaW1zLW5hMS5hZG9iZWxvZ2luLmNvbS9jLzg3OTAyYWFkZTQ4OTQ3ZDRhMDYxOTI0MjgzMjZkODQ3Ig0KfQ.AyZoPs4yC7S03Td5tsDKCiAej7ARUgQRXb0Bhlr-UAmKG5JFEnNuMX6hEGe5ePiu2r3wTjKEBOJdt6E1QQD4aq1i2VDZObYd15erId5CP-EOmAAIQS5Al9C9cF79Lg4NqOJIcnQ5R2XtQ7EBzDg3EH_Mtw8xwM_oOhxgLAtWrfHQikvd3supC80tGGEtYTG0ApgJMPbMGDAI6yrA1dPZxBv3Xmt2LuQK9ZwoEg3j3HKywYeX9vDq_gsLRXQh_yugOtGGwQ1VD40ZkQeXF09D2yBZqpTQ--SPdMuGm01MqXW47wacxo1Yv2lzg6fBE7RtnD0oPZqdkcMula9PcOR5Rg'
   });
   return (token.getBody().toString());
 }
@@ -277,7 +297,7 @@ app.post('/fulfillment', (req, res) => {
             console.log("length = " + length);
             if (noOfOffers < length) {
               length = noOfOffers;
-            } 
+            }
             let elements = [];
             for (var i = 0; i < length; i++) {
               let data = {
@@ -296,7 +316,7 @@ app.post('/fulfillment', (req, res) => {
               fulfillmentText: response.result.offers[0].attributes.Name,
               fulfillmentMessages: [{
                 payload: {
-                  message: "I bet you’ll like these " + offType + "(s) \nClick to know more if any of these "+ offType + "(s) strikes your fancy. " ,
+                  message: "I bet you’ll like these " + offType + "(s) \nClick to know more if any of these " + offType + "(s) strikes your fancy. ",
                   ignoreTextResponse: false,
                   platform: "kommunicate",
                   metadata: {
@@ -352,7 +372,7 @@ app.post('/fulfillment', (req, res) => {
         console.log("length = " + length);
         if (noOfOffers < length) {
           length = noOfOffers;
-        } 
+        }
         let elements = [];
         for (var i = 0; i < length; i++) {
           let data = {
@@ -379,7 +399,7 @@ app.post('/fulfillment', (req, res) => {
                 templateId: "7",
                 payload: {
                   headerImgSrc: response.result.offers[0].attributes.ImageUrl,
-                  headerText: response.result.offers[0].attributes.Type +"s",
+                  headerText: response.result.offers[0].attributes.Type + "s",
                   elements: elements,
                   buttons: [{
                     name: "Check out our blogs",
