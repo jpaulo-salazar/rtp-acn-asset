@@ -423,7 +423,9 @@ app.post('/fulfillment', (req, res) => {
         res.json(Errresponse);
       })
   } else if (req.body.queryResult.action == "input.bookflight") { //==================book flight=================
-    console.log(req.body.originalDetectIntentRequest.payload);
+    console.log("==================book flight parameters=================");
+    console.log(req.body.originalDetectIntentRequest.parameters);
+    console.log("==================book flight parameters close=================");
     request(amd_auth_option)
       .then(function (response) {
         console.log(response.access_token);
@@ -440,18 +442,18 @@ app.post('/fulfillment', (req, res) => {
               fulfillmentText: "DAPI Test",
               fulfillmentMessages: [{
                 payload: {
-                  message: "I've picked these just for you \nLike any of them? Click on the visuals if any of these exclusives strikes your fancy.",
+                  message: "I've picked these flights just for you",
                   ignoreTextResponse: false,
                   platform: "kommunicate",
                   metadata: {
                     contentType: "300",
                     templateId: "10",
                     payload: [{
-                      title: "Card Title",
+                      title: response.data[0].offerItems[0].services[0].segments[0].flightSegment.carrierCode,
                       subtitle: "Card Subtitle ",
                       header: {
-                        overlayText: "Overlay Text",
-                        imgSrc: "Header image for the card"
+                        overlayText: req.body.originalDetectIntentRequest.parameters.countries,
+                        imgSrc: "https://publish619.adobedemo.com/content/dam/rtp-asset/destinations/Bangkok%402x.png"
                       },
                       description: "Description",
                       titleExt: "title Extension",
