@@ -69,8 +69,8 @@ app.get('/dapi', (req, res) => {
   })*/
   request(amd_test_option)
   .then(function (response) {
-    console.log(response.body);
-    res.json(response.body);
+    console.log(response);
+    res.json(response);
       })
       .catch(function (err) {
         console.log(err);
