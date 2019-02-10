@@ -63,10 +63,14 @@ app.use(bodyParser.json())
 //Testing Amadeues Api
 app.get('/dapi', (req, res) => {
   console.log(req.body);
+  /*request(amd_auth_option)
+  .then(function (response){
+
+  })*/
   request(amd_test_option)
   .then(function (response) {
-    console.log(response);
-    res.json(response);
+    console.log(response.body);
+    res.json(response.body);
       })
       .catch(function (err) {
         console.log(err);
