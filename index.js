@@ -39,7 +39,7 @@ const amd_test_option ={
   uri: 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination=BKK&departureDate=2019-08-01&returnDate=2019-08-28&nonStop=true',
   headers: {
     "Accept":"application/vnd.amadeus+json" ,
-    "Authorization":"Bearer SIAhI3ZHlKkJvvEzCfkNLMkrcFYy"
+    "Authorization":"Bearer KgSu1YY1vRdgPX8Jdu570t4fxwZcy"
   },
   json: true
 
