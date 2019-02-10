@@ -425,6 +425,10 @@ app.post('/fulfillment', (req, res) => {
   } else if (req.body.queryResult.action == "input.bookflight") { //==================book flight=================
     console.log("==================book flight parameters=================");
     console.log(req.body.queryResult.parameters);
+    var startDate = req.body.queryResult.parameters.depart.split("T");
+    var endDate = req.body.queryResult.parameters.return.split("T");
+    console.log(startDate);
+    console.log(endDate);
     console.log("==================book flight parameters close=================");
     request(amd_auth_option)
       .then(function (response) {
