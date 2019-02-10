@@ -23,6 +23,27 @@ const options = {
   json: true
   // JSON stringifies the body automatically
 };
+const amd_auth_option ={
+  method: 'POST',
+  uri: 'https://test.api.amadeus.com/v1/security/oauth2/token',
+  body: {
+    "client_key": "oaMnCt4svBPFVQQI4FMQRIUz6BzPTnPJ",
+    "client_secret":"y0OJzwkYXjAqfAaG" ,
+    "grant_type":"client_credentials" 
+  },
+  json: true
+
+};
+const amd_test_option ={
+  method: 'GET',
+  uri: 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination=BKK&departureDate=2019-08-01&returnDate=2019-08-28&nonStop=true',
+  headers: {
+    "Accept":"application/vnd.amadeus+json" ,
+    "Authorization":"Bearer SIAhI3ZHlKkJvvEzCfkNLMkrcFYy"
+  },
+  json: true
+
+};
 
 const identity_event = {
   method: 'GET',
@@ -38,6 +59,37 @@ app.use(function (req, res, next) {
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
+//================================================================
+//Testing Amadeues Api
+app.get('/dapi', (req, res) => {
+  console.log(req.body);
+  request(amd_test_option)
+  .then(function (response) {
+    console.log(response);
+    res.json(response);
+      })
+      .catch(function (err) {
+        console.log(err);
+        res.json(err);
+      })
+});
+//================================================================
+//Testing Campaign call
+app.post('/campaign', (req, res) => {
+  console.log(req.body);
+  var tokenJson = JSON.parse(getToken());
+  var token = tokenJson.access_token;
+});
+function getToken() {
+  var token = request('POST', 'https://ims-na1.adobelogin.com/ims/exchange/jwt/', {
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'client_id=87902aade48947d4a06192428326d847&client_secret=644baa93-8268-40ce-8c83-ab69f9564546&jwt_token=eyJhbGciOiJSUzI1NiJ9.ew0KICAgICJleHAiOiAxNTQ5NTkzNzk2LA0KICAgICJpc3MiOiAiQjhEQzBGQTc1QjQ1Q0FDQjBBNDk1QzQ5QEFkb2JlT3JnIiwNCiAgICAic3ViIjogIjM5NUYxMjJDNUMzQzM2OEQwQTQ5NURBREB0ZWNoYWNjdC5hZG9iZS5jb20iLA0KICAgICJodHRwczovL2ltcy1uYTEuYWRvYmVsb2dpbi5jb20vcy9lbnRfY2FtcGFpZ25fc2RrIjogdHJ1ZSwNCiAgICAiYXVkIjogImh0dHBzOi8vaW1zLW5hMS5hZG9iZWxvZ2luLmNvbS9jLzg3OTAyYWFkZTQ4OTQ3ZDRhMDYxOTI0MjgzMjZkODQ3Ig0KfQ.AyZoPs4yC7S03Td5tsDKCiAej7ARUgQRXb0Bhlr-UAmKG5JFEnNuMX6hEGe5ePiu2r3wTjKEBOJdt6E1QQD4aq1i2VDZObYd15erId5CP-EOmAAIQS5Al9C9cF79Lg4NqOJIcnQ5R2XtQ7EBzDg3EH_Mtw8xwM_oOhxgLAtWrfHQikvd3supC80tGGEtYTG0ApgJMPbMGDAI6yrA1dPZxBv3Xmt2LuQK9ZwoEg3j3HKywYeX9vDq_gsLRXQh_yugOtGGwQ1VD40ZkQeXF09D2yBZqpTQ--SPdMuGm01MqXW47wacxo1Yv2lzg6fBE7RtnD0oPZqdkcMula9PcOR5Rg'
+  });
+  return (token.getBody().toString());
+}
+//================================================================
 app.post('/fulfillment', (req, res) => {
   console.log(req.body);
   const Errresponse = {
