@@ -425,8 +425,11 @@ app.post('/fulfillment', (req, res) => {
   } else if (req.body.queryResult.action == "input.bookflight") { //==================book flight=================
     console.log("==================book flight parameters=================");
     console.log(req.body.queryResult.parameters);
-    var startDate = req.body.queryResult.parameters.depart.split("T");
-    var endDate = req.body.queryResult.parameters.return.split("T");
+    var startDateSplit = req.body.queryResult.parameters.depart.split("T");
+    var startDate = startDateSplit[0];
+    var endDateSplit = req.body.queryResult.parameters.return.split("T");
+    var endDate = endDate[0];
+    var destination = req.body.queryResult.parameters.countries;
     console.log(startDate);
     console.log(endDate);
     console.log("==================book flight parameters close=================");
@@ -434,7 +437,7 @@ app.post('/fulfillment', (req, res) => {
       .then(function (response) {
         console.log(response.access_token);
         amd_test_option.headers.Authorization = "Bearer " + response.access_token;
-        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination=BKK&departureDate=2019-08-01&returnDate=2019-08-28&nonStop=true';
+        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination='+destination+"&departureDate="+startDate+"&returnDate="+endDate+"&nonStop=true";
         request(amd_test_option)
           .then(function (response) {
             // Handle the response
@@ -453,14 +456,14 @@ app.post('/fulfillment', (req, res) => {
                     contentType: "300",
                     templateId: "10",
                     payload: [{
-                      title: response.data[0].offerItems[0].services[0].segments[0].flightSegment.carrierCode,
-                      subtitle: "Card Subtitle ",
+                      title: "SIN ->" + req.body.queryResult.parameters.countries,
+                      subtitle: response.data[0].offerItems[0].price.total,
                       header: {
-                        overlayText: req.body.queryResult.parameters.countries,
+                        //overlayText: req.body.queryResult.parameters.countries,
                         imgSrc: "https://publish619.adobedemo.com/content/dam/rtp-asset/destinations/Bangkok%402x.png"
                       },
-                      description: "Description",
-                      titleExt: "title Extension",
+                      description: startDate + " to " + endDate,
+                      titleExt: response.data[0].offerItems[0].services[0].segments[0].flightSegment.carrierCode + " " + response.data[0].offerItems[0].services[0].segments[0].flightSegment.number,
                       buttons: [{
                         name: "Link Button",
                         action: {
