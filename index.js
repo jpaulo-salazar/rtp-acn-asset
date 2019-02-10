@@ -424,7 +424,7 @@ app.post('/fulfillment', (req, res) => {
       })
   } else if (req.body.queryResult.action == "input.bookflight") { //==================book flight=================
     console.log("==================book flight parameters=================");
-    console.log(req.body.originalDetectIntentRequest.parameters);
+    console.log(req.body.queryResult.parameters);
     console.log("==================book flight parameters close=================");
     request(amd_auth_option)
       .then(function (response) {
@@ -452,7 +452,7 @@ app.post('/fulfillment', (req, res) => {
                       title: response.data[0].offerItems[0].services[0].segments[0].flightSegment.carrierCode,
                       subtitle: "Card Subtitle ",
                       header: {
-                        overlayText: req.body.originalDetectIntentRequest.parameters.countries,
+                        overlayText: req.body.queryResult.parameters.countries,
                         imgSrc: "https://publish619.adobedemo.com/content/dam/rtp-asset/destinations/Bangkok%402x.png"
                       },
                       description: "Description",
