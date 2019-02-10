@@ -428,7 +428,7 @@ app.post('/fulfillment', (req, res) => {
     var startDateSplit = req.body.queryResult.parameters.depart.split("T");
     var startDate = startDateSplit[0];
     var endDateSplit = req.body.queryResult.parameters.return.split("T");
-    var endDate = endDate[0];
+    var endDate = endDateSplit[0];
     var destination = req.body.queryResult.parameters.countries;
     console.log(startDate);
     console.log(endDate);
