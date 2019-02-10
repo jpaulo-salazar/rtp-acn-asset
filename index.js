@@ -437,7 +437,7 @@ app.post('/fulfillment', (req, res) => {
       .then(function (response) {
         console.log(response.access_token);
         amd_test_option.headers.Authorization = "Bearer " + response.access_token;
-        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination='+destination+"&departureDate="+startDate+"&returnDate="+endDate+"&nonStop=true";
+        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination='+destination+"&departureDate="+startDate+"&returnDate="+endDate+"&nonStop=true&currency=SGD";
         request(amd_test_option)
           .then(function (response) {
             // Handle the response
@@ -457,7 +457,7 @@ app.post('/fulfillment', (req, res) => {
                     templateId: "10",
                     payload: [{
                       title: "SIN ->" + req.body.queryResult.parameters.countries,
-                      subtitle: response.data[0].offerItems[0].price.total,
+                      subtitle: "S$"+ response.data[0].offerItems[0].price.total,
                       header: {
                         //overlayText: req.body.queryResult.parameters.countries,
                         imgSrc: "https://publish619.adobedemo.com/content/dam/rtp-asset/destinations/Bangkok%402x.png"
@@ -467,9 +467,9 @@ app.post('/fulfillment', (req, res) => {
                       buttons: [{
                         name: "Link Button",
                         action: {
-                          type: "link",
+                          type: "Book - Doesnt work yet",
                           payload: {
-                            url: "https://www.facebook.com"
+                            url: "https://www.google.com"
                           }
                         }
                       }]
