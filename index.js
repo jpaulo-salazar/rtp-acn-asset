@@ -46,8 +46,13 @@ var amd_test_option = {
     "Authorization": "Bearer m1B4IvUE2iRIF8u9GHqXc8GYGQp0"
   },
   json: true
-
 };
+var Airtable = require('airtable');
+Airtable.configure({
+  endpointUrl: 'https://api.airtable.com',
+  apiKey: 'keyJEKq5757mM7GiT'
+});
+var base = Airtable.base('appT9esZyn76uGPXy');
 
 const identity_event = {
   method: 'GET',
@@ -75,6 +80,60 @@ app.use(bodyParser.json())
       console.log(err);
     })
 });*/
+async function fetchAirtableOffer(boxOffer) {
+  let offer = boxOffer.split(";");
+  offer.shift();
+  let offerDetails = [];
+  for (let eachOffer of offer) {
+    var temp = eachOffer.split("+");
+    var offerName = temp[0].trim();
+    var tripType = parseInt(temp[1]);
+    var formula = 'AND(name="' + offerName + '")';
+    console.log("Forumla " + formula);
+    let promise = new Promise((resolve, reject) => {
+      base('Imported table').select({
+        view: 'Grid view',
+        filterByFormula: formula
+      }).firstPage(function (err, records) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        if (records[0].fields != undefined)
+          resolve(records[0].fields);
+      });
+    });
+    let result = await promise;
+    console.log(result);
+    offerDetails.push(result);
+  }
+  return offerDetails;
+}
+
+app.post('/fetchOffers', (req, res) => {
+
+  console.log(req.body);
+  const box_options = {
+    method: 'POST',
+    uri: 'https://api-ap-southeast-2-production.boxever.com/v2/callFlows',
+    body: req.body,
+    json: true
+    // JSON stringifies the body automatically
+  };
+  request(box_options)
+    .then(function (response) {
+      console.log("Called Boxever Flow -- Response Below");
+      fetchAirtableOffer(response.reco4).then(x => res.json(x));
+      
+    })
+    .catch(function (err) {
+      // Deal with the error
+      // res.json(Errresponse);
+    });
+
+});
+
+
 app.get('/dapi', (req, res) => {
   console.log(req.body);
   /*request(amd_auth_option)
@@ -437,7 +496,7 @@ app.post('/fulfillment', (req, res) => {
       .then(function (response) {
         console.log(response.access_token);
         amd_test_option.headers.Authorization = "Bearer " + response.access_token;
-        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination='+destination+"&departureDate="+startDate+"&returnDate="+endDate+"&nonStop=true&currency=SGD";
+        amd_test_option.uri = 'https://test.api.amadeus.com/v1/shopping/flight-offers?origin=SIN&destination=' + destination + "&departureDate=" + startDate + "&returnDate=" + endDate + "&nonStop=true&currency=SGD";
         request(amd_test_option)
           .then(function (response) {
             // Handle the response
@@ -457,7 +516,7 @@ app.post('/fulfillment', (req, res) => {
                     templateId: "10",
                     payload: [{
                       title: "SIN ->" + req.body.queryResult.parameters.countries,
-                      subtitle: "S$"+ response.data[0].offerItems[0].price.total,
+                      subtitle: "S$" + response.data[0].offerItems[0].price.total,
                       header: {
                         //overlayText: req.body.queryResult.parameters.countries,
                         imgSrc: "https://publish619.adobedemo.com/content/dam/rtp-asset/destinations/Bangkok%402x.png"

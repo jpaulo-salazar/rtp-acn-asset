@@ -11,12 +11,14 @@
     "test": "node test.js"
   },
   "dependencies": {
-    "actions-on-google": "^2.4.1",
+    "actions-on-google": "^2.8.0",
+    "airtable": "^0.6.0",
     "amadeus": "^3.0.0",
     "cool-ascii-faces": "^1.3.4",
     "dialogflow-fulfillment": "^0.6.1",
     "ejs": "^2.5.6",
     "express": "^4.15.2",
+    "jshint": "^2.10.2",
     "node-schedule": "^1.3.1",
     "request-promise": "^4.2.2"
   },
