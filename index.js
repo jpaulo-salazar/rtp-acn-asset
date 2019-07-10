@@ -88,7 +88,16 @@ async function fetchAirtableOffer(boxOffer) {
     var temp = eachOffer.split("+");
     var offerName = temp[0].trim();
     var tripType = parseInt(temp[1]);
-    var formula = 'AND(name="' + offerName + '")';
+    var formula;
+    if(tripType == 0)
+    {
+      formula = 'AND(name="' + offerName + '")';
+    }
+    else
+    {
+      formula = 'AND(name="' + offerName + '",tripType='+tripType+ ')';
+    }
+    
     console.log("Forumla " + formula);
     let promise = new Promise((resolve, reject) => {
       base('Imported table').select({
@@ -99,13 +108,19 @@ async function fetchAirtableOffer(boxOffer) {
           console.error(err);
           return;
         }
-        if (records[0].fields != undefined)
-          resolve(records[0].fields);
+        let tempOffer = -1;
+        if (records.length !== 0)
+          tempOffer = records[0].fields;
+        resolve(tempOffer);
       });
     });
     let result = await promise;
-    console.log(result);
-    offerDetails.push(result);
+    if(result !== -1)
+    {
+      console.log(result);
+      offerDetails.push(result);
+    }
+      
   }
   return offerDetails;
 }
