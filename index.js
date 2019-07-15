@@ -122,7 +122,8 @@ async function fetchAirtableOffer(boxOffer) {
     }
       
   }
-  return offerDetails;
+  console.log("offer length" + offerDetails.slice(0,10).length);
+  return offerDetails.slice(0,10);
 }
 
 app.post('/fetchOffers', (req, res) => {
