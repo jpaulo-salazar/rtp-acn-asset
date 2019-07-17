@@ -148,6 +148,28 @@ app.post('/fetchOffers', (req, res) => {
     });
 
 });
+app.post('/packageOffers', (req, res) => {
+
+  console.log(req.body);
+  const box_options = {
+    method: 'POST',
+    uri: 'https://api-ap-southeast-2-production.boxever.com/v2/callFlows',
+    body: req.body,
+    json: true
+    // JSON stringifies the body automatically
+  };
+  request(box_options)
+    .then(function (response) {
+      console.log("Called Boxever Flow -- Response Below");
+      fetchAirtableOffer(response.reco4).then(x => res.json(x));
+      
+    })
+    .catch(function (err) {
+      // Deal with the error
+      // res.json(Errresponse);
+    });
+
+});
 
 
 app.get('/dapi', (req, res) => {
