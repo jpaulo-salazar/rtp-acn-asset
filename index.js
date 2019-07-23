@@ -89,15 +89,12 @@ async function fetchAirtableOffer(boxOffer) {
     var offerName = temp[0].trim();
     var tripType = parseInt(temp[1]);
     var formula;
-    if(tripType == 0)
-    {
+    if (tripType == 0) {
       formula = 'AND(name="' + offerName + '")';
+    } else {
+      formula = 'AND(name="' + offerName + '",tripType=' + tripType + ')';
     }
-    else
-    {
-      formula = 'AND(name="' + offerName + '",tripType='+tripType+ ')';
-    }
-    
+
     console.log("Forumla " + formula);
     let promise = new Promise((resolve, reject) => {
       base('Imported table').select({
@@ -115,15 +112,59 @@ async function fetchAirtableOffer(boxOffer) {
       });
     });
     let result = await promise;
-    if(result !== -1)
-    {
+    if (result !== -1) {
       console.log(result);
       offerDetails.push(result);
     }
-      
+
   }
-  console.log("offer length" + offerDetails.slice(0,10).length);
-  return offerDetails.slice(0,10);
+  console.log("offer length" + offerDetails.slice(0, 10).length);
+  return offerDetails.slice(0, 10);
+}
+
+async function fetchAirtablePackageOffer(boxOffer) {
+  let offer = boxOffer.split(";");
+  offer.shift();
+  let offerDetails = [];
+  var temp = offer[0].split("+");
+  var offerName = temp[0].trim();
+  var tripType = parseInt(temp[1]);
+  var custSegment = temp[2].trim().toLowerCase();
+  var formula;
+  if (tripType == 0 && custSegment !== "na") {
+    formula = 'AND(Find("' + offerName + '",{name}),offerSegment="' + custSegment + '")';
+  } else if (tripType !== 0 && custSegment === "na") {
+    formula = 'AND(Find("' + offerName + '",{name}),tripType=' + tripType + ')';
+  } else {
+    formula = 'AND(Find("' + offerName + '",{name}),tripType=' + tripType + ',offerSegment="' + custSegment + '")';
+  }
+  console.log("Forumla " + formula);
+  let promise = new Promise((resolve, reject) => {
+    base('Imported table').select({
+      view: 'Grid view',
+      filterByFormula: formula
+    }).firstPage(function (err, records) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      let tempOffer = [];
+      if (records.length !== 0)
+        records.forEach(function (element) {
+          tempOffer.push(element.fields);
+        });
+      resolve(tempOffer);
+    });
+  });
+  let result = await promise;
+  if (result.length >0) {
+    console.log(result);
+    offerDetails = result;
+  }
+
+
+  console.log("offer length" + offerDetails.slice(0, 10).length);
+  return offerDetails.slice(0, 10);
 }
 
 app.post('/fetchOffers', (req, res) => {
@@ -140,7 +181,7 @@ app.post('/fetchOffers', (req, res) => {
     .then(function (response) {
       console.log("Called Boxever Flow -- Response Below");
       fetchAirtableOffer(response.reco4).then(x => res.json(x));
-      
+
     })
     .catch(function (err) {
       // Deal with the error
@@ -161,8 +202,9 @@ app.post('/packageOffers', (req, res) => {
   request(box_options)
     .then(function (response) {
       console.log("Called Boxever Flow -- Response Below");
-      fetchAirtableOffer(response.reco4).then(x => res.json(x));
-      
+      console.log(response.reco1);
+      fetchAirtablePackageOffer(response.reco1).then(x => res.json(x));
+
     })
     .catch(function (err) {
       // Deal with the error
