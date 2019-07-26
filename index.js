@@ -131,12 +131,12 @@ async function fetchAirtablePackageOffer(boxOffer) {
   var tripType = parseInt(temp[1]);
   var custSegment = temp[2].trim().toLowerCase();
   var formula;
-  if (tripType == 0 && custSegment !== "na") {
-    formula = 'AND(Find("' + offerName + '",{name}),offerSegment="' + custSegment + '")';
+  if (custSegment === "na") {
+    formula = 'AND(Find("' + offerName + '",{name}))';
   } else if (tripType !== 0 && custSegment === "na") {
-    formula = 'AND(Find("' + offerName + '",{name}),tripType=' + tripType + ')';
+    formula = 'AND(Find("' + offerName + '",{name}))';//,tripType=' + tripType + ')';
   } else {
-    formula = 'AND(Find("' + offerName + '",{name}),tripType=' + tripType + ',offerSegment="' + custSegment + '")';
+    formula = 'AND(Find("' + offerName + '",{name}),offerSegment="' + custSegment + '")';// + tripType + ',offerSegment="' + custSegment + '")';
   }
   console.log("Forumla " + formula);
   let promise = new Promise((resolve, reject) => {
