@@ -149,9 +149,15 @@ async function fetchAirtablePackageOffer(boxOffer) {
         return;
       }
       let tempOffer = [];
+      let offerNames =[];
       if (records.length !== 0)
         records.forEach(function (element) {
-          tempOffer.push(element.fields);
+          if(!(offerNames.includes(element.fields.name)))
+          {
+            offerNames.push(element.fields.name); 
+            tempOffer.push(element.fields);
+          }
+         
         });
       resolve(tempOffer);
     });
